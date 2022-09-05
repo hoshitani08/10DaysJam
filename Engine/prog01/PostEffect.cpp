@@ -8,7 +8,7 @@
 using namespace DirectX;
 
 // Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-const float PostEffect::clearColor[4] = { 0.25f, 0.5f, 0.1f, 1.0f };
+const float PostEffect::clearColor[4] = { 0.1f,0.25f, 0.5f,1.0f };
 
 void PostEffect::Initialize(ID3D12Device* device)
 {

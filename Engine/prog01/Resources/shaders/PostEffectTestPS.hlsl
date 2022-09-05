@@ -57,7 +57,7 @@ float4 GaussianBlur(float2 uv, float sigma, float shiftWidth)
 
 float4 main(VSOutput input) : SV_TARGET
 {
-	//float4 texColor = tex0.Sample(smp, input.uv);
+	float4 texColor = tex0.Sample(smp, input.uv);
 	////swssfloat depth = tex2.Sample(smp, input.uv);
 	//float _Depth = 1 - 0.015f;
 	//float _NWidth = 0.015f;
@@ -90,9 +90,9 @@ float4 main(VSOutput input) : SV_TARGET
 		color = colortex1;
 	}*/
 
-	//return texColor;
+	return texColor;
 
-	float _Depth = 1 - 0.02f;
+	/*float _Depth = 1 - 0.02f;
 	float _NWidth = 0.02f;
 	float _FWidth = 0.02f;
 	float depth = tex2.Sample(smp, input.uv);
@@ -103,7 +103,7 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 farColor = GaussianBlur(input.uv, 0.003f, 0.0005f);
 	float4 color = { farColor.rgb, (1 - far) };
 
-	return (1 - near) * pintColor + near * ((1 - far) * nearColor + far * color);
+	return (1 - near) * pintColor + near * ((1 - far) * nearColor + far * color);*/
 
 	//return color;
 }
