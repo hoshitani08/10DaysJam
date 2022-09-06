@@ -45,14 +45,11 @@ void GameScene::Initialize()
 	// パーティクルマネージャ生成
 	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
 
-	PmxObject3d::StaticInitialize(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
-
 	//ライト生成
 	light_ = LightGroup::Create();
 	//オブジェクトにライトをセット
 	Object3d::SetLight(light_.get());
 	FbxObject3d::SetLight(light_.get());
-	PmxObject3d::SetLight(light_.get());
 	light_->SetDirLightActive(0, true);
 	light_->SetDirLightActive(1, false);
 	light_->SetDirLightActive(2, false);
@@ -60,14 +57,22 @@ void GameScene::Initialize()
 	light_->SetPointLightActive(1, false);
 	light_->SetPointLightActive(2, false);
 	light_->SetCircleShadowActive(0, true);
+	light_->SetDirLightDir(0, { 0,0,1,0 });
 
 	// 3Dオブジェクト生成
+	player_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+	player_->SetPosition({ 0,3,0 });
+	hit_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+	hit_->SetPosition({ 0,1.5f,0 });
+	box_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("cube"));
+	float size = 1.5f;
+	box_->SetScale({ size,size,size });
 
 	// FBXオブジェクト生成
 
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
-	camera_->SetEye({ 0,0,-50 });
+	camera_->SetEye({ 0,0,-15 });
 }
 
 void GameScene::Finalize()
@@ -80,6 +85,26 @@ void GameScene::Update()
 	light_->Update();
 	particleMan_->Update();
 
+	if (input->TriggerKey(DIK_SPACE))
+	{
+		Box enemy;
+		enemy.center = { box_->GetPosition().x, box_->GetPosition().y, box_->GetPosition().z, 0 };
+		enemy.scale = box_->GetScale();
+
+		Sphere player;
+		player.center = { hit_->GetPosition().x, hit_->GetPosition().y, hit_->GetPosition().z, 0 };
+
+		if (Collision::CheckSphere2Box(player, enemy))
+		{
+			flag = true;
+		}
+	}
+
+
+	player_->Update();
+	box_->Update();
+	hit_->Update();
+	camera_->Update();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
 }
@@ -138,7 +163,12 @@ void GameScene::EffectDraw()
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
 	Object3d::PreDraw(cmdList);
-	
+	player_->Draw();
+	hit_->Draw();
+	if (!flag)
+	{
+		box_->Draw();
+	}
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画

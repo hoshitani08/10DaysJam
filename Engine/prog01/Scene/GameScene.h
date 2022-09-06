@@ -11,8 +11,6 @@
 #include "Camera.h"
 #include "LightGroup.h"
 #include "FbxObject3d.h"
-#include "PmxObject3d.h"
-#include "PmxModel.h"
 
 #include <DirectXMath.h>
 #include <vector>
@@ -62,6 +60,13 @@ private: // メンバ変数
 	//パーティクル
 	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト
+	std::unique_ptr<Object3d> player_;
+	std::unique_ptr<Object3d> hit_;
+	std::unique_ptr<Object3d> box_;
+
+	// 当たったかどうか
+	bool flag = false;
+
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;
