@@ -67,7 +67,7 @@ private: // メンバ変数
 	//オブジェクト
 	std::unique_ptr<Human> player_;
 	std::unique_ptr<Object3d> hit_;
-	std::unique_ptr<Object3d> box_;
+	std::vector<Object3d*> box_ = {};
 
 	// 当たったかどうか
 	bool flag = false;

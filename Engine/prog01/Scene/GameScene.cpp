@@ -64,15 +64,16 @@ void GameScene::Initialize()
 	player_ = Human::Create();
 	hit_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 	hit_->SetPosition({ 0,1.5f,0 });
-	box_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("cube"));
-	float size = 1.5f;
-	box_->SetScale({ size,size,size });
+
+	MapChip::GetInstance()->CsvLoad(10, 10, "sampleMap");
+
+	BlockCreate("sampleMap");
 
 	// FBXオブジェクト生成
 
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
-	camera_->SetEye({ 0,0,-15 });
+	camera_->SetEye({ 0,0,-50 });
 }
 
 void GameScene::Finalize()
@@ -85,7 +86,7 @@ void GameScene::Update()
 	light_->Update();
 	particleMan_->Update();
 
-	if (input->TriggerKey(DIK_SPACE))
+	/*if (input->TriggerKey(DIK_SPACE))
 	{
 		Box enemy;
 		enemy.center = { box_->GetPosition().x, box_->GetPosition().y, box_->GetPosition().z, 0 };
@@ -98,7 +99,7 @@ void GameScene::Update()
 		{
 			flag = true;
 		}
-	}
+	}*/
 
 	player_->Move();
 
@@ -123,7 +124,11 @@ void GameScene::Update()
 
 
 	player_->Update();
-	box_->Update();
+	for (auto a : box_)
+	{
+		a->Update();
+	}
+	
 	hit_->Update();
 	camera_->Update();
 	// 全ての衝突をチェック
@@ -188,7 +193,10 @@ void GameScene::EffectDraw()
 	hit_->Draw();
 	if (!flag)
 	{
-		box_->Draw();
+		for (auto a : box_)
+		{
+			a->Draw();
+		}
 	}
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
@@ -216,7 +224,13 @@ void GameScene::BlockCreate(std::string fName)
 		{
 			if (MapChip::GetInstance()->GetChipNum(j, i, fName) == 1)
 			{
+				
 
+				Object3d* a = Object3d::Create2(ObjFactory::GetInstance()->GetModel("cube"));
+				float size = 1.5f;
+				a->SetScale({ size,size,size });
+				a->SetPosition({ (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, (i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4, 0 });
+				box_.push_back(a);
 			}
 		}
 	}
