@@ -7,6 +7,7 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #include <xinput.h>
+#include "DebugText.h"
 
 #pragma comment (lib, "xinput.lib")
 
@@ -91,6 +92,26 @@ public: //メンバ関数
 	bool TriggerMouseRight();
 	// マウス移動量を取得
 	MouseMove GetMouseMove();
+	//　マウスの座標を取得
+	XMFLOAT2& GetMousePoint()
+	{
+		POINT mousePos;
+		GetCursorPos(&mousePos);
+
+		WINDOWINFO windowInfo;
+		windowInfo.cbSize = sizeof(WINDOWINFO);
+		HWND hDesktop = GetDesktopWindow();
+		GetWindowInfo(hDesktop, &windowInfo);
+
+		// スクリーン座標をクライアント座標に変換する
+		ScreenToClient(hDesktop, &mousePos);
+
+		XMFLOAT2 p;
+		p.x = mousePos.x - (windowInfo.rcWindow.right / 2);
+		p.y = mousePos.y - (windowInfo.rcWindow.bottom / 2);
+
+		return p;
+	};
 
 private:
 	Input();

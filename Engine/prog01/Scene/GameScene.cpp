@@ -17,6 +17,7 @@
 #include "DebugText.h"
 #include "Audio.h"
 #include "Input.h"
+#include "MapChip.h"
 
 using namespace DirectX;
 
@@ -60,8 +61,7 @@ void GameScene::Initialize()
 	light_->SetDirLightDir(0, { 0,0,1,0 });
 
 	// 3Dオブジェクト生成
-	player_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
-	player_->SetPosition({ 0,3,0 });
+	player_ = Human::Create();
 	hit_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 	hit_->SetPosition({ 0,1.5f,0 });
 	box_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("cube"));
@@ -99,6 +99,27 @@ void GameScene::Update()
 			flag = true;
 		}
 	}
+
+	player_->Move();
+
+	float angle = input->GetMousePoint().x;
+
+	if (angle <= 0)
+	{
+		angle = 0;
+	}
+	else if (angle >= 180)
+	{
+		angle = 180;
+	}
+	
+	float rad = angle * 3.14159265359f / 180.0f;
+	XMFLOAT2 around = { -cos(rad) * 1.5f / 1.0f, -sin(rad) * 1.5f / 1.0f };
+	XMFLOAT3 wPos = hit_->GetPosition();
+	wPos.x = around.x + player_->GetPosition().x;
+	wPos.y = around.y + player_->GetPosition().y;
+
+	hit_->SetPosition(wPos);
 
 
 	player_->Update();
@@ -185,4 +206,18 @@ void GameScene::EffectDraw()
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
+}
+
+void GameScene::BlockCreate(std::string fName)
+{
+	for (int i = 0; i < MapChip::GetInstance()->GetMapChipMaxXY(fName).y; i++)
+	{
+		for (int j = 0; j < MapChip::GetInstance()->GetMapChipMaxXY(fName).x; j++)
+		{
+			if (MapChip::GetInstance()->GetChipNum(j, i, fName) == 1)
+			{
+
+			}
+		}
+	}
 }

@@ -319,6 +319,7 @@
     <ClCompile Include="GameObject\Ease.cpp" />
     <ClCompile Include="GameObject\MapChip.cpp" />
     <ClCompile Include="GameObject\Player.cpp" />
+    <ClCompile Include="Human.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
@@ -378,6 +379,7 @@
     <ClInclude Include="GameObject\Ease.h" />
     <ClInclude Include="GameObject\MapChip.h" />
     <ClInclude Include="GameObject\Player.h" />
+    <ClInclude Include="Human.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="PmxLoader.h" />

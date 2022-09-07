@@ -186,6 +186,7 @@
     <ClCompile Include="PostEffect.cpp">
       <Filter>ゲームシステム\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Human.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -359,6 +360,7 @@
     <ClInclude Include="PostEffect.h">
       <Filter>ゲームシステム\PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Human.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">
