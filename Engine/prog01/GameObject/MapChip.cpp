@@ -19,6 +19,15 @@ MapChip* MapChip::GetInstance()
 	return &instance;
 }
 
+void MapChip::Finalize()
+{
+	for (auto& a : mapData)
+	{
+		a.mapCsvNumber.clear();
+		a.mapName.clear();
+	}
+}
+
 void MapChip::CsvLoad(int mapChipMaxX, int mapChipMaxY, std::string fName)
 {
 	std::ifstream ifs(baseDirectory + fName + ".csv");

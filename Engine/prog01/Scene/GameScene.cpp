@@ -57,17 +57,16 @@ void GameScene::Initialize()
 	light_->SetPointLightActive(0, false);
 	light_->SetPointLightActive(1, false);
 	light_->SetPointLightActive(2, false);
-	light_->SetCircleShadowActive(0, true);
+	light_->SetCircleShadowActive(0, false);
 	light_->SetDirLightDir(0, { 0,0,1,0 });
 
 	// 3Dオブジェクト生成
 	player_ = Human::Create();
 	hit_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
-	hit_->SetPosition({ 0,1.5f,0 });
 
 	MapChip::GetInstance()->CsvLoad(10, 10, "sampleMap");
 
-	BlockCreate("sampleMap");
+	//BlockCreate("sampleMap");
 
 	// FBXオブジェクト生成
 
@@ -78,6 +77,12 @@ void GameScene::Initialize()
 
 void GameScene::Finalize()
 {
+	for (auto a : box_)
+	{
+		delete a;
+	}
+	box_.clear();
+	MapChip::GetInstance()->Finalize();
 }
 
 void GameScene::Update()
@@ -85,42 +90,23 @@ void GameScene::Update()
 	Input* input = Input::GetInstance();
 	light_->Update();
 	particleMan_->Update();
-
-	/*if (input->TriggerKey(DIK_SPACE))
-	{
-		Box enemy;
-		enemy.center = { box_->GetPosition().x, box_->GetPosition().y, box_->GetPosition().z, 0 };
-		enemy.scale = box_->GetScale();
-
-		Sphere player;
-		player.center = { hit_->GetPosition().x, hit_->GetPosition().y, hit_->GetPosition().z, 0 };
-
-		if (Collision::CheckSphere2Box(player, enemy))
-		{
-			flag = true;
-		}
-	}*/
-
+	// ステージ生成
+	StageCreate();
+	// ヒットボックス
+	HitBox();
+	// ブロックの破壊
+	BlockBreak();
+	// プレイヤーの動き
 	player_->Move();
 
-	float angle = input->GetMousePoint().x;
-
-	if (angle <= 0)
+	if (input->PushMouseLeft())
 	{
-		angle = 0;
+		player_->SetSpeed_(0.2f);
 	}
-	else if (angle >= 180)
+	else
 	{
-		angle = 180;
+		player_->SetSpeed_();
 	}
-	
-	float rad = angle * 3.14159265359f / 180.0f;
-	XMFLOAT2 around = { -cos(rad) * 1.5f / 1.0f, -sin(rad) * 1.5f / 1.0f };
-	XMFLOAT3 wPos = hit_->GetPosition();
-	wPos.x = around.x + player_->GetPosition().x;
-	wPos.y = around.y + player_->GetPosition().y;
-
-	hit_->SetPosition(wPos);
 
 
 	player_->Update();
@@ -130,9 +116,12 @@ void GameScene::Update()
 	}
 	
 	hit_->Update();
-	camera_->Update();
+	CameraMove();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
+
+	DebugText::GetInstance()->VariablePrint(0, 0, "playerPos", player_->GetPosition().y, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 16, "box_.size", box_.size(), 1.0f);
 }
 
 void GameScene::Draw()
@@ -222,16 +211,112 @@ void GameScene::BlockCreate(std::string fName)
 	{
 		for (int j = 0; j < MapChip::GetInstance()->GetMapChipMaxXY(fName).x; j++)
 		{
-			if (MapChip::GetInstance()->GetChipNum(j, i, fName) == 1)
+			if (MapChip::GetInstance()->GetChipNum(j, i, fName) != 0)
 			{
-				
-
-				Object3d* a = Object3d::Create2(ObjFactory::GetInstance()->GetModel("cube"));
-				float size = 1.5f;
-				a->SetScale({ size,size,size });
-				a->SetPosition({ (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, (i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4, 0 });
+				Block* a = new Block();
+				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 3, ((i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 3) - (30 * createCount_), 0 });
 				box_.push_back(a);
 			}
 		}
+	}
+}
+
+void GameScene::CameraMove()
+{
+	// カメラ注視点をセット
+	camera_->SetTarget({ 0, player_->GetPosition().y - 10, 0 });
+	camera_->SetEye({ 0, player_->GetPosition().y - 10, -50 });
+	camera_->Update();
+}
+
+void GameScene::BlockBreak()
+{
+	int count = 0;
+	for (auto a : box_)
+	{
+		Box enemy;
+		enemy.center = { a->GetPosition().x, a->GetPosition().y, a->GetPosition().z, 0 };
+		enemy.scale = a->GetScale();
+
+		Sphere player;
+		player.center = { hit_->GetPosition().x, hit_->GetPosition().y, hit_->GetPosition().z, 0 };
+
+		if (a->GetType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
+		{
+			delete a;
+			box_.erase(box_.begin() + count);
+		}
+		else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
+		{
+			delete a;
+			box_.erase(box_.begin() + count);
+		}
+		else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
+		{
+			delete a;
+			box_.erase(box_.begin() + count);
+		}
+		else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
+		{
+			delete a;
+			box_.erase(box_.begin() + count);
+		}
+		else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
+		{
+			delete a;
+			box_.erase(box_.begin() + count);
+		}
+		else if (a->GetType() == Block::DIAMOND && Collision::CheckSphere2Box(player, enemy))
+		{
+			delete a;
+			box_.erase(box_.begin() + count);
+		}
+		else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
+		{
+			delete a;
+			box_.erase(box_.begin() + count);
+		}
+
+		//後始末
+		if (a->GetPosition().y >= (player_->GetPosition().y + 10))
+		{
+			delete a;
+			box_.erase(box_.begin() + count);
+		}
+		count++;
+	}
+	
+}
+
+void GameScene::HitBox()
+{
+	Input* input = Input::GetInstance();
+
+	float angle = input->GetMousePoint().x;
+
+	if (angle <= -90)
+	{
+		angle = -90;
+	}
+	else if (angle >= 90)
+	{
+		angle = 90;
+	}
+
+	float rad = (angle + 90) * 3.14159265359f / 180.0f;
+	XMFLOAT2 around = { -cos(rad) * 1.5f / 1.0f, -sin(rad) * 1.5f / 1.0f };
+	XMFLOAT3 wPos = hit_->GetPosition();
+	wPos.x = around.x + player_->GetPosition().x;
+	wPos.y = around.y + player_->GetPosition().y;
+
+	hit_->SetPosition(wPos);
+}
+
+void GameScene::StageCreate()
+{
+	if (player_->GetPosition().y <= -createCount_ * 10 && box_.size() <= 150)
+	{
+		createCount_++;
+		BlockCreate("sampleMap");
 	}
 }

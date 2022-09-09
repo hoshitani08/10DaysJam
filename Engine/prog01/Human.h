@@ -40,8 +40,8 @@ public: // メンバ関数
 	const XMFLOAT3& GetRotation() { return rotation_; }
 	// X,Y,Z軸回りの設定
 	void SetRotation(XMFLOAT3 rotation) { rotation_ = rotation; }
-
-	const XMFLOAT2& GetVector() { return vector; }
+	// 速度の設定
+	void SetSpeed_(float speed = 0.1f) { speed_ = speed; }
 
 private: // メンバ変数
 	// モデル
@@ -50,6 +50,7 @@ private: // メンバ変数
 	XMFLOAT3 position_ = {};
 	// X,Y,Z軸回りのローカル回転角
 	XMFLOAT3 rotation_ = {};
-	XMFLOAT2 vector = {};
+	XMFLOAT2 vector_ = {};
+	float speed_ = 0.1f;
 };
 

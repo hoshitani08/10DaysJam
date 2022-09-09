@@ -187,6 +187,8 @@
       <Filter>ゲームシステム\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Human.cpp" />
+    <ClCompile Include="Block.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -361,6 +363,8 @@
       <Filter>ゲームシステム\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Human.h" />
+    <ClInclude Include="Block.h" />
+    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">

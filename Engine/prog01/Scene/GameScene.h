@@ -17,6 +17,7 @@
 #include <memory>
 
 #include "Human.h"
+#include "Block.h"
 
 class CollisionManager;
 class Player;
@@ -56,6 +57,14 @@ public: // メンバ関数
 
 	// ブロック生成
 	void BlockCreate(std::string fName);
+	// カメラの動き
+	void CameraMove();
+	// ブロックの破壊
+	void BlockBreak();
+	// ヒットボックス
+	void HitBox();
+	// ステージ生成
+	void StageCreate();
 
 private: // メンバ変数
 	//カメラ
@@ -67,10 +76,12 @@ private: // メンバ変数
 	//オブジェクト
 	std::unique_ptr<Human> player_;
 	std::unique_ptr<Object3d> hit_;
-	std::vector<Object3d*> box_ = {};
+	std::vector<Block*> box_;
 
 	// 当たったかどうか
 	bool flag = false;
+	// 生成のカウント
+	int createCount_ = 0;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;

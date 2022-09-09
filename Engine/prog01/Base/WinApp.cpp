@@ -11,6 +11,7 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		PostQuitMessage(0); // OSに対して、アプリの終了を伝える
 		return 0;
 	}
+	//ShowCursor(FALSE);
 	return DefWindowProc(hwnd, msg, wparam, lparam); // 標準の処理を行う
 }
 

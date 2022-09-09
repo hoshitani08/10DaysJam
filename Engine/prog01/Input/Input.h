@@ -110,6 +110,9 @@ public: //ƒƒ“ƒoŠÖ”
 		p.x = mousePos.x - (windowInfo.rcWindow.right / 2);
 		p.y = mousePos.y - (windowInfo.rcWindow.bottom / 2);
 
+		/*DebugText::GetInstance()->VariablePrint(0, 0, "windowInfo.rcWindow.right", windowInfo.rcWindow.right, 1.0f);
+		DebugText::GetInstance()->VariablePrint(0, 16, "windowInfo.rcWindow.bottom", windowInfo.rcWindow.bottom, 1.0f);*/
+
 		return p;
 	};
 

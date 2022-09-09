@@ -305,6 +305,7 @@
     <ClCompile Include="Base\MyGame.cpp" />
     <ClCompile Include="Base\ShaderManager.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\Collision.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
@@ -335,6 +336,7 @@
     <ClCompile Include="Scene\SceneFactory.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h" />
@@ -364,6 +366,7 @@
     <ClInclude Include="Base\SafeDelete.h" />
     <ClInclude Include="Base\ShaderManager.h" />
     <ClInclude Include="Base\WinApp.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\BaseCollider.h" />
     <ClInclude Include="Collision\Collision.h" />
@@ -395,6 +398,7 @@
     <ClInclude Include="Scene\SceneFactory.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\TitleScene.h" />
+    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

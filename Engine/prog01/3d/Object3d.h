@@ -48,7 +48,6 @@ public: // 静的メンバ関数
 	static void PostDraw();
 	// 3Dオブジェクト生成
 	static std::unique_ptr<Object3d> Create(Model* model = nullptr);
-	static Object3d* Create2(Model* model = nullptr);
 	// カメラのセット
 	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
 	//ライトのセット

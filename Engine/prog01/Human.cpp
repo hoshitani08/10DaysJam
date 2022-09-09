@@ -50,14 +50,14 @@ void Human::Move()
 	Input* input = Input::GetInstance();
 
 	position_ = human_->GetPosition();
-	vector = { input->GetMousePoint().x - position_.x, input->GetMousePoint().y - position_.y };
+	XMFLOAT2 vector = { input->GetMousePoint().x - position_.x, input->GetMousePoint().y - position_.y };
 	float v = 0.0f;
 
 	v = sqrtf((vector.x * vector.x) + (vector.y * vector.y));
-	vector = { (vector.x / v) * 0.1f, (vector.y / v) * 0.1f };
+	vector = { (vector.x / v) * speed_, (vector.y / v) * speed_ };
 
 	position_.x += vector.x;
-	position_.y -= vector.y;
+	position_.y -= speed_;
 
 	human_->SetPosition(position_);
 }

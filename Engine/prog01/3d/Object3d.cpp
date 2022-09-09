@@ -84,30 +84,6 @@ std::unique_ptr<Object3d> Object3d::Create(Model* model)
 	return std::unique_ptr<Object3d>(object3d);
 }
 
-Object3d* Object3d::Create2(Model* model)
-{
-	// 3Dオブジェクトのインスタンスを生成
-	Object3d* object3d = new Object3d();
-	if (object3d == nullptr)
-	{
-		return nullptr;
-	}
-
-	// 初期化
-	if (!object3d->Initialize())
-	{
-		assert(0);
-		return nullptr;
-	}
-
-	if (model)
-	{
-		object3d->SetModel(model);
-	}
-
-	return object3d;
-}
-
 Object3d::~Object3d()
 {
 	if (collider)

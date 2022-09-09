@@ -36,6 +36,9 @@ public:
 
 	static MapChip* GetInstance();
 
+	// 終了
+	void Finalize();
+
 public:
 	// ルートパス
 	static const string baseDirectory;
