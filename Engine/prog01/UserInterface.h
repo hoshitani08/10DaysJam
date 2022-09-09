@@ -48,14 +48,14 @@ public: // メンバ関数
 	void BackDraw();
 	// 手前の描画
 	void NearDraw();
-	//
+	// 化石が一式揃ったときの計算
 	void CompleteCalculate();
-	//
+	// ティラノサウルスのスコア
 	void TBoneScore(TParts tBone);
-	//
+	// サーベルタイガーのスコア
 	void SBoneScore(SParts sBone);
-	//
-	void AddScore(float score) { score_ = score; }
+	// スコアを足す
+	void AddScore(float score) { score_ += score; }
 
 private: // メンバ変数
 	// 掘った距離
@@ -63,9 +63,9 @@ private: // メンバ変数
 	// スコア
 	float score_ = 0.0f;
 	// 燃料
-	float fuel_ = 100.0f;
-	//
+	float fuel_ = 500.0f;
+	//　サーベルタイガーのパーツのデータ
 	std::vector<SParts> sBone_;
-	// 
+	// ティラノサウルスのパーツのデータ
 	std::vector<TParts> tBone_;
 };

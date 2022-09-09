@@ -26,6 +26,7 @@ void Human::Initialize()
 {
 	human_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 	human_->SetPosition({ 0,3,0 });
+	human_->SetScale({ 2,2,2 });
 }
 
 void Human::Finalize()
@@ -54,10 +55,19 @@ void Human::Move()
 	float v = 0.0f;
 
 	v = sqrtf((vector.x * vector.x) + (vector.y * vector.y));
-	vector = { (vector.x / v) * speed_, (vector.y / v) * speed_ };
+	vector = { (vector.x / v) * speed_.y, (vector.y / v) * speed_.y };
 
-	position_.x += vector.x;
-	position_.y -= speed_;
+	if (vector.x > 0)
+	{
+		speed_.x = 0.1f;
+	}
+	else
+	{
+		speed_.x = -0.1f;
+	}
+
+	position_.x += speed_.x;
+	position_.y -= speed_.y;
 
 	human_->SetPosition(position_);
 }

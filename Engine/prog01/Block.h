@@ -36,7 +36,7 @@ public: // サブクラス
 	} BLOCK_TYPE;
 
 private: // 定数
-	const XMFLOAT3 START_SCALE = { 1.5f, 1.5f, 1.5f };
+	const XMFLOAT3 START_SCALE = { 2.0f, 2.0f, 2.0f };
 
 public: // メンバ関数
 	Block() = default;
@@ -78,4 +78,3 @@ private: // メンバ変数
 	// タイプ
 	BLOCK_TYPE type_;
 };
-

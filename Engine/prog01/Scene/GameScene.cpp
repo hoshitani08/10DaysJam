@@ -63,12 +63,17 @@ void GameScene::Initialize()
 	// 3Dオブジェクト生成
 	player_ = Human::Create();
 	hit_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+	hit_->SetScale({ 2,2,2 });
 
 	MapChip::GetInstance()->CsvLoad(10, 10, "sampleMap");
 
 	//BlockCreate("sampleMap");
 
 	// FBXオブジェクト生成
+
+	//UI生成
+	ui = std::make_unique<UserInterface>();
+	ui->Initialize();
 
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
@@ -214,7 +219,7 @@ void GameScene::BlockCreate(std::string fName)
 			if (MapChip::GetInstance()->GetChipNum(j, i, fName) != 0)
 			{
 				Block* a = new Block();
-				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 3, ((i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 3) - (30 * createCount_), 0 });
+				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, ((i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (40 * createCount_), 0 });
 				box_.push_back(a);
 			}
 		}
@@ -273,6 +278,7 @@ void GameScene::BlockBreak()
 		}
 		else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
 		{
+			ui->AddScore(1000);
 			delete a;
 			box_.erase(box_.begin() + count);
 		}

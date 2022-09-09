@@ -18,6 +18,7 @@
 
 #include "Human.h"
 #include "Block.h"
+#include "UserInterface.h"
 
 class CollisionManager;
 class Player;
@@ -77,6 +78,8 @@ private: // ƒƒ“ƒo•Ï”
 	std::unique_ptr<Human> player_;
 	std::unique_ptr<Object3d> hit_;
 	std::vector<Block*> box_;
+	//UI
+	std::unique_ptr<UserInterface> ui;
 
 	// “–‚½‚Á‚½‚©‚Ç‚¤‚©
 	bool flag = false;

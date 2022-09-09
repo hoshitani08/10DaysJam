@@ -29,6 +29,7 @@ void UserInterface::CompleteCalculate()
 	{
 		if (a.head && a.body && a.tail)
 		{
+			AddScore(7500);
 			tBone_.erase(tBone_.begin() + count);
 		}
 		count++;
@@ -40,6 +41,7 @@ void UserInterface::CompleteCalculate()
 	{
 		if (a.upperBody && a.lowerBody)
 		{
+			AddScore(5000);
 			sBone_.erase(sBone_.begin() + count);
 		}
 		count++;
