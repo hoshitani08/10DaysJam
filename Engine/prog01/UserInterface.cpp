@@ -1,4 +1,5 @@
 #include "UserInterface.h"
+#include "DebugText.h"
 
 void UserInterface::Initialize()
 {
@@ -10,6 +11,10 @@ void UserInterface::Finalize()
 
 void UserInterface::Update()
 {
+	Calculate();
+	DebugText::GetInstance()->VariablePrint(0, 0, "dugDistance_", dugDistance_.point, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 16, "score_", score_.point, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 32, "fuel_", fuel_.point, 1.0f);
 	CompleteCalculate();
 }
 
@@ -100,5 +105,42 @@ void UserInterface::SBoneScore(SParts sBone)
 		}
 
 		count++;
+	}
+}
+
+void UserInterface::Calculate()
+{
+	if (score_.savePoint > 0)
+	{
+		score_.point += 1;
+		score_.savePoint--;
+	}
+
+	if (dugDistance_.savePoint > 0)
+	{
+		score_.point += dugDistance_.savePoint;
+		dugDistance_.savePoint--;
+	}
+
+	if (fuel_.savePoint > 0)
+	{
+		fuel_.point += 1;
+		fuel_.savePoint--;
+
+		if (fuel_.point >= 500)
+		{
+			fuel_.point = 500;
+			fuel_.savePoint = 0;
+		}
+	}
+	else if(fuel_.savePoint < 0)
+	{
+		fuel_.point -= 1;
+		fuel_.savePoint++;
+
+		if (fuel_.point <= 0)
+		{
+			fuel_.point = 0;
+		}
 	}
 }

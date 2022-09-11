@@ -15,9 +15,13 @@
 #include <DirectXMath.h>
 #include <vector>
 #include <memory>
+#include <iostream>
+#include <array>
+#include <algorithm>
 
 #include "Human.h"
 #include "Block.h"
+#include "Drill.h"
 #include "UserInterface.h"
 
 class CollisionManager;
@@ -35,6 +39,19 @@ private: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 	using XMVECTOR = DirectX::XMVECTOR;
+
+public: // サブクラス
+	struct OreData
+	{
+		int timer = 0;
+		bool flag = false;
+	};
+
+	struct DrillData
+	{
+		std::unique_ptr<Object3d> object;
+		
+	};
 
 private: // 静的定数
 	static const int DEBUG_TEXT_TEX_NUMBER = 0;
@@ -66,6 +83,10 @@ public: // メンバ関数
 	void HitBox();
 	// ステージ生成
 	void StageCreate();
+	// 鉱石の効果
+	void OreBuff();
+	// 左クリック
+	void SpecialMove();
 
 private: // メンバ変数
 	//カメラ
@@ -76,15 +97,22 @@ private: // メンバ変数
 	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト
 	std::unique_ptr<Human> player_;
-	std::unique_ptr<Object3d> hit_;
+	std::array<std::unique_ptr<Object3d>, 3> hit_;
 	std::vector<Block*> box_;
+	std::vector<Drill*> drill_;
 	//UI
-	std::unique_ptr<UserInterface> ui;
+	std::unique_ptr<UserInterface> ui_;
 
 	// 当たったかどうか
 	bool flag = false;
 	// 生成のカウント
 	int createCount_ = 0;
+	// 進んだ距離のカウント
+	int dugCount_ = 5;
+	// 金鉱石
+	OreData goldOre;
+	// 鉄鉱石
+	OreData ironStone;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;

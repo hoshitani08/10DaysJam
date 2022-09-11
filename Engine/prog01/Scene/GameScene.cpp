@@ -62,8 +62,12 @@ void GameScene::Initialize()
 
 	// 3Dオブジェクト生成
 	player_ = Human::Create();
-	hit_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
-	hit_->SetScale({ 2,2,2 });
+
+	for (int i = 0; i < hit_.size(); i++)
+	{
+		hit_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		hit_[i]->SetScale({ 2,2,2 });
+	}
 
 	MapChip::GetInstance()->CsvLoad(10, 10, "sampleMap");
 
@@ -72,8 +76,8 @@ void GameScene::Initialize()
 	// FBXオブジェクト生成
 
 	//UI生成
-	ui = std::make_unique<UserInterface>();
-	ui->Initialize();
+	ui_ = std::make_unique<UserInterface>();
+	ui_->Initialize();
 
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
@@ -87,6 +91,13 @@ void GameScene::Finalize()
 		delete a;
 	}
 	box_.clear();
+
+	for (auto a : drill_)
+	{
+		delete a;
+	}
+	drill_.clear();
+
 	MapChip::GetInstance()->Finalize();
 }
 
@@ -99,18 +110,18 @@ void GameScene::Update()
 	StageCreate();
 	// ヒットボックス
 	HitBox();
+	// 鉱石の効果
+	OreBuff();
+	// 左クリック
+	SpecialMove();
 	// ブロックの破壊
 	BlockBreak();
 	// プレイヤーの動き
 	player_->Move();
 
-	if (input->PushMouseLeft())
+	for (auto a : drill_)
 	{
-		player_->SetSpeed_(0.2f);
-	}
-	else
-	{
-		player_->SetSpeed_();
+		a->Update();
 	}
 
 
@@ -119,14 +130,14 @@ void GameScene::Update()
 	{
 		a->Update();
 	}
-	
-	hit_->Update();
+	ui_->Update();
+	for (int i = 0; i < hit_.size(); i++)
+	{
+		hit_[i]->Update();
+	}
 	CameraMove();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
-
-	DebugText::GetInstance()->VariablePrint(0, 0, "playerPos", player_->GetPosition().y, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 16, "box_.size", box_.size(), 1.0f);
 }
 
 void GameScene::Draw()
@@ -184,7 +195,20 @@ void GameScene::EffectDraw()
 	// 3Dオブクジェクトの描画
 	Object3d::PreDraw(cmdList);
 	player_->Draw();
-	hit_->Draw();
+	for (int i = 0; i < hit_.size(); i++)
+	{
+		if (!goldOre.flag && i != 0)
+		{
+			break;
+		}
+		hit_[i]->Draw();
+	}
+
+	for (auto a : drill_)
+	{
+		a->Draw();
+	}
+
 	if (!flag)
 	{
 		for (auto a : box_)
@@ -243,44 +267,64 @@ void GameScene::BlockBreak()
 		enemy.center = { a->GetPosition().x, a->GetPosition().y, a->GetPosition().z, 0 };
 		enemy.scale = a->GetScale();
 
-		Sphere player;
-		player.center = { hit_->GetPosition().x, hit_->GetPosition().y, hit_->GetPosition().z, 0 };
+		for (int i = 0; i < hit_.size(); i++)
+		{
+			if (!goldOre.flag && i != 0)
+			{
+				break;
+			}
 
-		if (a->GetType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
-		{
-			delete a;
-			box_.erase(box_.begin() + count);
-		}
-		else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
-		{
-			delete a;
-			box_.erase(box_.begin() + count);
-		}
-		else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
-		{
-			delete a;
-			box_.erase(box_.begin() + count);
-		}
-		else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
-		{
-			delete a;
-			box_.erase(box_.begin() + count);
-		}
-		else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
-		{
-			delete a;
-			box_.erase(box_.begin() + count);
-		}
-		else if (a->GetType() == Block::DIAMOND && Collision::CheckSphere2Box(player, enemy))
-		{
-			delete a;
-			box_.erase(box_.begin() + count);
-		}
-		else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
-		{
-			ui->AddScore(1000);
-			delete a;
-			box_.erase(box_.begin() + count);
+			Sphere player;
+			player.center = { hit_[i]->GetPosition().x, hit_[i]->GetPosition().y, hit_[i]->GetPosition().z, 0 };
+			player.radius = 2;
+
+			if (a->GetType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+			}
+			else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+
+				if (ironStone.flag)
+				{
+					ui_->SetSaveFuel(-25);
+				}
+			}
+			else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+
+				ui_->SetSaveFuel(100);
+			}
+			else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+
+				ironStone.flag = true;
+			}
+			else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+
+				goldOre.flag = true;
+			}
+			else if (a->GetType() == Block::DIAMOND && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+			}
+			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
+			{
+				ui_->AddScore(1000);
+				delete a;
+				box_.erase(box_.begin() + count);
+			}
 		}
 
 		//後始末
@@ -291,7 +335,14 @@ void GameScene::BlockBreak()
 		}
 		count++;
 	}
-	
+
+	if (player_->GetPosition().y <= (4 * -dugCount_))
+	{
+		ui_->DugDistanceCalculate(1.0f);
+		ui_->AddScore(10);
+		ui_->SetSaveFuel(-10);
+		dugCount_++;
+	}
 }
 
 void GameScene::HitBox()
@@ -309,20 +360,163 @@ void GameScene::HitBox()
 		angle = 90;
 	}
 
-	float rad = (angle + 90) * 3.14159265359f / 180.0f;
-	XMFLOAT2 around = { -cos(rad) * 1.5f / 1.0f, -sin(rad) * 1.5f / 1.0f };
-	XMFLOAT3 wPos = hit_->GetPosition();
-	wPos.x = around.x + player_->GetPosition().x;
-	wPos.y = around.y + player_->GetPosition().y;
+	float count = 0.0f;
+	XMFLOAT2 length = { 2.0f, 2.0f };
+	for (int i = 0; i < hit_.size(); i++)
+	{
+		if (i == 1)
+		{
+			count = 45;
+		}
+		else if (i == 2)
+		{
+			count = -45;
+		}
 
-	hit_->SetPosition(wPos);
+		if (i != 0)
+		{
+			length.x = 3.0f;
+			length.y = 3.0f;
+		}
+
+		float rad = (angle + 90 + count) * 3.14159265359f / 180.0f;
+		XMFLOAT2 around = { -cos(rad) * length.x / 1.0f, -sin(rad) * length.y / 1.0f };
+		XMFLOAT3 wPos = hit_[i]->GetPosition();
+
+		wPos.x = around.x + player_->GetPosition().x;
+		wPos.y = around.y + player_->GetPosition().y;
+
+		hit_[i]->SetPosition(wPos);
+	}
 }
 
 void GameScene::StageCreate()
 {
-	if (player_->GetPosition().y <= -createCount_ * 10 && box_.size() <= 150)
+	if (player_->GetPosition().y <= -createCount_ * 10 && box_.size() < 140)
 	{
 		createCount_++;
 		BlockCreate("sampleMap");
+	}
+}
+
+void GameScene::OreBuff()
+{
+	if (goldOre.flag && goldOre.timer > 0)
+	{
+		goldOre.timer--;
+		DebugText::GetInstance()->Print("goldOre.flag = true", 0, 48, 1.0f);
+	}
+	else
+	{
+		goldOre.timer = 900;
+		goldOre.flag = false;
+		DebugText::GetInstance()->Print("goldOre.flag = false", 0, 48, 1.0f);
+	}
+
+	if (ironStone.flag && ironStone.timer > 0)
+	{
+		ironStone.timer--;
+		DebugText::GetInstance()->Print("ironStone.flag = true", 0, 80, 1.0f);
+	}
+	else
+	{
+		ironStone.timer = 900;
+		ironStone.flag = false;
+		DebugText::GetInstance()->Print("ironStone.flag = false", 0, 80, 1.0f);
+	}
+
+	DebugText::GetInstance()->VariablePrint(0, 64 ,"goldOre.timer", goldOre.timer, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 96, "ironStone.timer", ironStone.timer, 1.0f);
+}
+
+void GameScene::SpecialMove()
+{
+	Input* input = Input::GetInstance();
+
+	if (input->TriggerMouseLeft())
+	{
+		Drill* drill = new Drill;
+
+		drill->Initialize(hit_[0]->GetPosition(), player_->GetPosition(), input->GetMousePoint());
+
+		drill_.push_back(drill);
+		ui_->SetSaveFuel(-50);
+	}
+
+	int count = 0;
+	for (auto a : box_)
+	{
+		Box enemy;
+		enemy.center = { a->GetPosition().x, a->GetPosition().y, a->GetPosition().z, 0 };
+		enemy.scale = a->GetScale();
+
+		int drillCount = 0;
+
+		for (auto b : drill_)
+		{
+			XMFLOAT3 pos = b->GetPosition();
+
+			Sphere player;
+			player.center = { pos.x, pos.y, pos.z, 0 };
+			player.radius = 2;
+
+			if (a->GetType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+
+				b->AddCount(1);
+			}
+			else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+				b->AddCount(1);
+			}
+			else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+				b->AddCount(1);
+				ui_->SetSaveFuel(100);
+			}
+			else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+				b->AddCount(1);
+				ironStone.flag = true;
+			}
+			else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+				b->AddCount(1);
+				goldOre.flag = true;
+			}
+			else if (a->GetType() == Block::DIAMOND && Collision::CheckSphere2Box(player, enemy))
+			{
+				delete a;
+				box_.erase(box_.begin() + count);
+				b->AddCount(1);
+			}
+			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
+			{
+				ui_->AddScore(1000);
+				delete a;
+				box_.erase(box_.begin() + count);
+				b->AddCount(1);
+			}
+
+			if (b->GetFlag())
+			{
+				delete b;
+				drill_.erase(drill_.begin() + drillCount);
+			}
+
+			drillCount++;
+		}
+
+		count++;
 	}
 }

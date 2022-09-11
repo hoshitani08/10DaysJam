@@ -40,8 +40,14 @@ public: // メンバ関数
 	const XMFLOAT3& GetRotation() { return rotation_; }
 	// X,Y,Z軸回りの設定
 	void SetRotation(XMFLOAT3 rotation) { rotation_ = rotation; }
-	// 速度の設定
-	void SetSpeed_(float speed = 0.1f) { speed_.y = speed; }
+	// スケールの取得
+	const XMFLOAT3& GetScale() { return scale_; }
+	// スケールの設定
+	void SetScale(XMFLOAT3 scale)
+	{
+		scale_ = scale;
+		human_->SetScale(scale_);
+	}
 
 private: // メンバ変数
 	// モデル
@@ -50,5 +56,8 @@ private: // メンバ変数
 	XMFLOAT3 position_ = {};
 	// X,Y,Z軸回りのローカル回転角
 	XMFLOAT3 rotation_ = {};
+	// スケール
+	XMFLOAT3 scale_ = {2,2,2};
+	//
 	XMFLOAT2 speed_ = { 0.1f, 0.1f };
 };

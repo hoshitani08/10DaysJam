@@ -26,7 +26,7 @@ void Human::Initialize()
 {
 	human_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 	human_->SetPosition({ 0,3,0 });
-	human_->SetScale({ 2,2,2 });
+	human_->SetScale(scale_);
 }
 
 void Human::Finalize()

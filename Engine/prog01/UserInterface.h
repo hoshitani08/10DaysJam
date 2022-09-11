@@ -33,6 +33,12 @@ public: // サブクラス
 		bool tail = false;
 	};
 
+	struct NumberData
+	{
+		float savePoint = 0.0f;
+		float point = 0.0f;
+	};
+
 public: // メンバ関数
 	// コンストラクタ
 	UserInterface() = default;
@@ -55,15 +61,25 @@ public: // メンバ関数
 	// サーベルタイガーのスコア
 	void SBoneScore(SParts sBone);
 	// スコアを足す
-	void AddScore(float score) { score_ += score; }
+	void AddScore(float score) { score_.savePoint += score; }
+	// 掘った距離の計算
+	void DugDistanceCalculate(float dugDistance)
+	{
+		dugDistance_.point += dugDistance;
+		dugDistance_.savePoint += dugDistance;
+	}
+	// 燃料の増減
+	void SetSaveFuel(float fuel) { fuel_.savePoint += fuel; }
+	// 計算
+	void Calculate();
 
 private: // メンバ変数
 	// 掘った距離
-	float dugDistance_ = 0.0f;
+	NumberData dugDistance_ = {};
 	// スコア
-	float score_ = 0.0f;
+	NumberData score_ = { 0.0f, 0.0f };
 	// 燃料
-	float fuel_ = 500.0f;
+	NumberData fuel_ = { 0.0f, 500.0f };
 	//　サーベルタイガーのパーツのデータ
 	std::vector<SParts> sBone_;
 	// ティラノサウルスのパーツのデータ
