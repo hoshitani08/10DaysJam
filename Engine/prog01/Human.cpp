@@ -59,11 +59,11 @@ void Human::Move()
 
 	if (vector.x > 0)
 	{
-		speed_.x = 0.1f;
+		speed_.x = 2.5f * vector.x;
 	}
 	else
 	{
-		speed_.x = -0.1f;
+		speed_.x = 2.5f * vector.x;
 	}
 
 	position_.x += speed_.x;
