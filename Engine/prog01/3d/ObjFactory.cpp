@@ -5,8 +5,18 @@ const std::string ObjFactory::baseDirectory = "Resources/";
 
 void ObjFactory::Initialize()
 {
-	LoadModel("cube");
+	LoadModel("block");
 	LoadModel("sphere");
+	// “y
+	LoadModel("sampleDirt11");
+	// d‚¢Î
+	LoadModel("stone");
+	// Î’Y
+	LoadModel("sampleCoal1");
+	// “SzÎ
+	LoadModel("sampleIron1");
+	// ‹àzÎ
+	LoadModel("sampleGold1");
 }
 
 void ObjFactory::Finalize()

@@ -71,3 +71,21 @@ void Human::Move()
 
 	human_->SetPosition(position_);
 }
+
+void Human::SetPosition(XMFLOAT3 position)
+{
+	position_ = position;
+	human_->SetPosition(position_);
+}
+
+void Human::SetRotation(XMFLOAT3 rotation)
+{
+	rotation_ = rotation;
+	human_->SetRotation(rotation_);
+}
+
+void Human::SetScale(XMFLOAT3 scale)
+{
+	scale_ = scale;
+	human_->SetScale(scale_);
+}

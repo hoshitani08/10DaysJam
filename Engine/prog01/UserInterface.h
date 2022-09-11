@@ -72,6 +72,8 @@ public: // メンバ関数
 	void SetSaveFuel(float fuel) { fuel_.savePoint += fuel; }
 	// 計算
 	void Calculate();
+	// 燃料の残量取得
+	float GetFuel() { return fuel_.point; }
 
 private: // メンバ変数
 	// 掘った距離

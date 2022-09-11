@@ -58,7 +58,7 @@ void GameScene::Initialize()
 	light_->SetPointLightActive(1, false);
 	light_->SetPointLightActive(2, false);
 	light_->SetCircleShadowActive(0, false);
-	light_->SetDirLightDir(0, { 0,0,1,0 });
+	light_->SetDirLightDir(0, { 0,-1,1,0 });
 
 	// 3Dオブジェクト生成
 	player_ = Human::Create();
@@ -69,7 +69,18 @@ void GameScene::Initialize()
 		hit_[i]->SetScale({ 2,2,2 });
 	}
 
-	MapChip::GetInstance()->CsvLoad(10, 10, "sampleMap");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map01");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map02");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map03");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map04");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map05");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map06");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map07");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map08");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map09");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map10");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map11");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map12");
 
 	//BlockCreate("sampleMap");
 
@@ -108,22 +119,24 @@ void GameScene::Update()
 	particleMan_->Update();
 	// ステージ生成
 	StageCreate();
-	// ヒットボックス
-	HitBox();
-	// 鉱石の効果
-	OreBuff();
-	// 左クリック
-	SpecialMove();
-	// ブロックの破壊
-	BlockBreak();
-	// プレイヤーの動き
-	player_->Move();
+	if (ui_->GetFuel() > 0)
+	{
+		// ヒットボックス
+		HitBox();
+		// 鉱石の効果
+		OreBuff();
+		// 左クリック
+		SpecialMove();
+		// ブロックの破壊
+		BlockBreak();
+		// プレイヤーの動き
+		player_->Move();
+	}
 
 	for (auto a : drill_)
 	{
 		a->Update();
 	}
-
 
 	player_->Update();
 	for (auto a : box_)
@@ -243,7 +256,7 @@ void GameScene::BlockCreate(std::string fName)
 			if (MapChip::GetInstance()->GetChipNum(j, i, fName) != 0)
 			{
 				Block* a = new Block();
-				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, ((i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (40 * createCount_), 0 });
+				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, (((i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (60 * createCount_) + 30), 0 });
 				box_.push_back(a);
 			}
 		}
@@ -314,25 +327,55 @@ void GameScene::BlockBreak()
 
 				goldOre.flag = true;
 			}
-			else if (a->GetType() == Block::DIAMOND && Collision::CheckSphere2Box(player, enemy))
-			{
-				delete a;
-				box_.erase(box_.begin() + count);
-			}
 			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
 			{
 				ui_->AddScore(1000);
 				delete a;
 				box_.erase(box_.begin() + count);
+
+				int typeCount = 0;
+				typeCount = rand() % 3;
+
+				if (typeCount == 1)
+				{
+					// サーベルタイガー
+					typeCount = rand() % 2;
+					if (typeCount == 0)
+					{
+						ui_->SBoneScore({ true, false });
+					}
+					else
+					{
+						ui_->SBoneScore({ false, true });
+					}
+				}
+				else if (typeCount == 2)
+				{
+					// ティラノサウルス
+					typeCount = rand() % 3;
+					if (typeCount == 0)
+					{
+						ui_->TBoneScore({ true, false });
+					}
+					else if (typeCount == 1)
+					{
+						ui_->TBoneScore({ false, true, false });
+					}
+					else
+					{
+						ui_->TBoneScore({ false, false ,true });
+					}
+				}
 			}
 		}
 
 		//後始末
-		if (a->GetPosition().y >= (player_->GetPosition().y + 10))
+		if (a->GetPosition().y >= (player_->GetPosition().y + 15))
 		{
 			delete a;
 			box_.erase(box_.begin() + count);
 		}
+
 		count++;
 	}
 
@@ -392,10 +435,68 @@ void GameScene::HitBox()
 
 void GameScene::StageCreate()
 {
-	if (player_->GetPosition().y <= -createCount_ * 10 && box_.size() < 140)
+	if (player_->GetPosition().y <= -createCount_ * 10 && box_.size() < 300)
 	{
 		createCount_++;
-		BlockCreate("sampleMap");
+		int count = 0;
+		do
+		{
+			count = rand() % 12;
+		} while (count == 0);
+
+		if (createCount_ <= 1)
+		{
+			count = 0;
+		}
+
+		if (count == 0)
+		{
+			BlockCreate("map01");
+		}
+		else if (count == 1)
+		{
+			BlockCreate("map02");
+		}
+		else if (count == 2)
+		{
+			BlockCreate("map03");
+		}
+		else if (count == 3)
+		{
+			BlockCreate("map04");
+		}
+		else if (count == 4)
+		{
+			BlockCreate("map05");
+		}
+		else if (count == 5)
+		{
+			BlockCreate("map06");
+		}
+		else if (count == 6)
+		{
+			BlockCreate("map07");
+		}
+		else if (count == 7)
+		{
+			BlockCreate("map08");
+		}
+		else if (count == 8)
+		{
+			BlockCreate("map09");
+		}
+		else if (count == 9)
+		{
+			BlockCreate("map10");
+		}
+		else if (count == 10)
+		{
+			BlockCreate("map11");
+		}
+		else if (count == 11)
+		{
+			BlockCreate("map12");
+		}
 	}
 }
 
@@ -494,18 +595,46 @@ void GameScene::SpecialMove()
 				b->AddCount(1);
 				goldOre.flag = true;
 			}
-			else if (a->GetType() == Block::DIAMOND && Collision::CheckSphere2Box(player, enemy))
-			{
-				delete a;
-				box_.erase(box_.begin() + count);
-				b->AddCount(1);
-			}
 			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
 			{
 				ui_->AddScore(1000);
 				delete a;
 				box_.erase(box_.begin() + count);
 				b->AddCount(1);
+
+				int typeCount = 0;
+				typeCount = rand() % 3;
+
+				if (typeCount == 1)
+				{
+					// サーベルタイガー
+					typeCount = rand() % 2;
+					if (typeCount == 0)
+					{
+						ui_->SBoneScore({ true, false });
+					}
+					else
+					{
+						ui_->SBoneScore({ false, true });
+					}
+				}
+				else if (typeCount == 2)
+				{
+					// ティラノサウルス
+					typeCount = rand() % 3;
+					if (typeCount == 0)
+					{
+						ui_->TBoneScore({ true, false });
+					}
+					else if (typeCount == 1)
+					{
+						ui_->TBoneScore({ false, true, false });
+					}
+					else
+					{
+						ui_->TBoneScore({ false, false ,true });
+					}
+				}
 			}
 
 			if (b->GetFlag())

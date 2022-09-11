@@ -27,7 +27,6 @@ public: // サブクラス
 		COAL,      // 石炭
 		IRONSTONE, // 鉄鉱石
 		GOLDORE,   // 金鉱石
-		DIAMOND,   // ダイヤモンド
 		FOSSIL,    // 化石
 
 
@@ -53,16 +52,15 @@ public: // メンバ関数
 	// 座標の取得
 	const XMFLOAT3& GetPosition() { return position_; }
 	// 座標の設定
-	void SetPosition(XMFLOAT3 position) { position_ = position; }
+	void SetPosition(XMFLOAT3 position);
 	// X,Y,Z軸回りの取得
 	const XMFLOAT3& GetRotation() { return rotation_; }
 	// X,Y,Z軸回りの設定
-	void SetRotation(XMFLOAT3 rotation) { rotation_ = rotation; }
+	void SetRotation(XMFLOAT3 rotation);
 	// スケールの取得
 	const XMFLOAT3& GetScale() { return scale_; }
 	// スケールの設定
-	void SetScale(XMFLOAT3 scale) { scale_ = scale; }
-
+	void SetScale(XMFLOAT3 scale);
 	// タイプの取得
 	BLOCK_TYPE GetType() { return type_; }
 

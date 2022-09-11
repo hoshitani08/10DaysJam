@@ -45,7 +45,7 @@ void Drill::Update()
 
 	object_->SetPosition(position_);
 
-	if (count_ >= 10 || position_.x >= 15 || position_.x <= -15)
+	if (count_ >= 10 || position_.x >= 30 || position_.x <= -30)
 	{
 		flag_ = true;
 	}
@@ -56,4 +56,22 @@ void Drill::Update()
 void Drill::Draw()
 {
 	object_->Draw();
+}
+
+void Drill::SetPosition(XMFLOAT3 position)
+{
+	position_ = position;
+	object_->SetPosition(position_);
+}
+
+void Drill::SetRotation(XMFLOAT3 rotation)
+{
+	rotation_ = rotation;
+	object_->SetRotation(rotation_);
+}
+
+void Drill::SetScale(XMFLOAT3 scale)
+{
+	scale_ = scale;
+	object_->SetScale(scale_);
 }
