@@ -30,7 +30,7 @@ public: // ƒƒ“ƒoŠÖ”
 	// •`‰æ
 	void Draw();
 
-	void Move(float angle, XMFLOAT2 speed);
+	void Move(float angle, XMFLOAT2 speed, float gravity);
 
 	// À•W‚Ìæ“¾
 	const XMFLOAT3& GetPosition() { return position_; }

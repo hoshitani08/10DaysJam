@@ -69,6 +69,7 @@ void GameScene::Initialize()
 		hit_[i]->SetScale({ 2,2,2 });
 	}
 
+	MapChip::GetInstance()->CsvLoad(15, 15, "map00");
 	MapChip::GetInstance()->CsvLoad(15, 15, "map01");
 	MapChip::GetInstance()->CsvLoad(15, 15, "map02");
 	MapChip::GetInstance()->CsvLoad(15, 15, "map03");
@@ -130,7 +131,7 @@ void GameScene::Update()
 		// ブロックの破壊
 		BlockBreak();
 		// プレイヤーの動き
-		player_->Move(input->PadStickAngle() + 90, input->PadStickGradient());
+		PlayerMove();
 	}
 
 	for (auto a : drill_)
@@ -256,7 +257,7 @@ void GameScene::BlockCreate(std::string fName)
 			if (MapChip::GetInstance()->GetChipNum(j, i, fName) != 0)
 			{
 				Block* a = new Block();
-				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, (((i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (60 * createCount_) + 30), 0 });
+				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, (((-i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (60 * createCount_) + 30), 0 });
 				box_.push_back(a);
 			}
 		}
@@ -451,7 +452,7 @@ void GameScene::StageCreate()
 		int count = 0;
 		do
 		{
-			count = rand() % 12;
+			count = rand() % 13;
 		} while (count == 0);
 
 		if (createCount_ <= 1)
@@ -461,49 +462,53 @@ void GameScene::StageCreate()
 
 		if (count == 0)
 		{
-			BlockCreate("map01");
+			BlockCreate("map00");
 		}
 		else if (count == 1)
 		{
-			BlockCreate("map02");
+			BlockCreate("map01");
 		}
 		else if (count == 2)
 		{
-			BlockCreate("map03");
+			BlockCreate("map02");
 		}
 		else if (count == 3)
 		{
-			BlockCreate("map04");
+			BlockCreate("map03");
 		}
 		else if (count == 4)
 		{
-			BlockCreate("map05");
+			BlockCreate("map04");
 		}
 		else if (count == 5)
 		{
-			BlockCreate("map06");
+			BlockCreate("map05");
 		}
 		else if (count == 6)
 		{
-			BlockCreate("map07");
+			BlockCreate("map06");
 		}
 		else if (count == 7)
 		{
-			BlockCreate("map08");
+			BlockCreate("map07");
 		}
 		else if (count == 8)
 		{
-			BlockCreate("map09");
+			BlockCreate("map08");
 		}
 		else if (count == 9)
 		{
-			BlockCreate("map10");
+			BlockCreate("map09");
 		}
 		else if (count == 10)
 		{
-			BlockCreate("map11");
+			BlockCreate("map10");
 		}
 		else if (count == 11)
+		{
+			BlockCreate("map11");
+		}
+		else if (count == 12)
 		{
 			BlockCreate("map12");
 		}
@@ -658,4 +663,58 @@ void GameScene::SpecialMove()
 
 		count++;
 	}
+}
+
+void GameScene::PlayerMove()
+{
+	Input* input = Input::GetInstance();
+
+	gravity += 0.2f;
+
+	if (gravity >= 1.0f)
+	{
+		gravity = 1.0f;
+	}
+
+	for (auto a : box_)
+	{
+		Box enemy;
+		enemy.center = { a->GetPosition().x, a->GetPosition().y, a->GetPosition().z, 0 };
+		enemy.scale = a->GetScale();
+
+		for (int i = 0; i < hit_.size(); i++)
+		{
+			Sphere player;
+			player.center = { player_->GetPosition().x, player_->GetPosition().y, player_->GetPosition().z, 0 };
+			player.radius = 2;
+
+			if (a->GetType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
+			{
+				gravity = 0.0f;
+			}
+		}
+	}
+
+	// プレイヤーの動き
+	player_->Move(input->PadStickAngle() + 90, input->PadStickGradient(), gravity);
 }

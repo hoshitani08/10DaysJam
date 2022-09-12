@@ -87,6 +87,8 @@ public: // メンバ関数
 	void OreBuff();
 	// 左クリック
 	void SpecialMove();
+	// プレイヤーの動き
+	void PlayerMove();
 
 private: // メンバ変数
 	//カメラ
@@ -117,6 +119,8 @@ private: // メンバ変数
 	float saveAngle = 90.0f;
 	// フラグ
 	bool changeFlag = false;
+	// 重力
+	float gravity = 0.2f;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;

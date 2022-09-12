@@ -46,16 +46,16 @@ void Human::Draw()
 	human_->Draw();
 }
 
-void Human::Move(float angle, XMFLOAT2 speed)
+void Human::Move(float angle, XMFLOAT2 gradient, float gravity)
 {
 	Input* input = Input::GetInstance();
 
 	position_ = human_->GetPosition();
 
-	float hSpeed = (float)sqrtf((speed.x * speed.x) + (speed.y * speed.y));
+	float hSpeed = (float)sqrtf((gradient.x * gradient.x) + (gradient.y * gradient.y));
 
 	position_.x += sinf((angle * 3.14) / 180.0f) * hSpeed * 0.5f;
-	position_.y -= 0.2f;
+	position_.y -= gravity;
 
 	human_->SetPosition(position_);
 }
