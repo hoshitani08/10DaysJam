@@ -129,7 +129,6 @@ void GameScene::Update()
 		SpecialMove();
 		// ブロックの破壊
 		BlockBreak();
-
 		// プレイヤーの動き
 		player_->Move(input->PadStickAngle() + 90, input->PadStickGradient());
 	}
@@ -446,7 +445,7 @@ void GameScene::HitBox()
 
 void GameScene::StageCreate()
 {
-	if (player_->GetPosition().y <= -createCount_ * 10 && box_.size() < 300)
+	if (player_->GetPosition().y <= -createCount_ * 10 && box_.size() < 450)
 	{
 		createCount_++;
 		int count = 0;
