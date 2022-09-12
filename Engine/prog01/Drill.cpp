@@ -3,7 +3,7 @@
 #include "FbxFactory.h"
 #include "ObjFactory.h"
 
-void Drill::Initialize(XMFLOAT3 hPosition, XMFLOAT3 pPosition, XMFLOAT2 mPosition)
+void Drill::Initialize(XMFLOAT3 hPosition, XMFLOAT3 pPosition, float saveAngle)
 {
 	object_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 
@@ -13,20 +13,12 @@ void Drill::Initialize(XMFLOAT3 hPosition, XMFLOAT3 pPosition, XMFLOAT2 mPositio
 	object_->SetPosition(position_);
 	object_->SetScale(scale_);
 
-	float angle = mPosition.x;
+	float angle = saveAngle;
 
-	if (angle <= -90)
-	{
-		angle = -90;
-	}
-	else if (angle >= 90)
-	{
-		angle = 90;
-	}
 	XMFLOAT2 length = { 2.0f, 2.0f };
 
-	float rad = (angle + 90) * 3.14159265359f / 180.0f;
-	XMFLOAT2 around = { -cos(rad) * length.x / 1.0f, -sin(rad) * length.y / 1.0f };
+	float rad = angle * 3.14159265359f / 180.0f;
+	XMFLOAT2 around = { cos(rad) * length.x / 1.0f, -sin(rad) * length.y / 1.0f };
 
 	speed_.x = around.x;
 	speed_.y = around.y;
@@ -45,7 +37,7 @@ void Drill::Update()
 
 	object_->SetPosition(position_);
 
-	if (count_ >= 10 || position_.x >= 30 || position_.x <= -30)
+	if (count_ >= 6 || position_.x >= 30 || position_.x <= -30)
 	{
 		flag_ = true;
 	}

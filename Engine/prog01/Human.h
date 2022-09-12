@@ -30,7 +30,7 @@ public: // メンバ関数
 	// 描画
 	void Draw();
 
-	void Move();
+	void Move(float angle, XMFLOAT2 speed);
 
 	// 座標の取得
 	const XMFLOAT3& GetPosition() { return position_; }
@@ -54,6 +54,4 @@ private: // メンバ変数
 	XMFLOAT3 rotation_ = {};
 	// スケール
 	XMFLOAT3 scale_ = {2,2,2};
-	//
-	XMFLOAT2 speed_ = { 0.1f, 0.1f };
 };

@@ -24,7 +24,7 @@ public: // メンバ関数
 	Drill() = default;
 	~Drill() = default;
 	// 初期化
-	void Initialize(XMFLOAT3 hPosition, XMFLOAT3 pPosition, XMFLOAT2 mPosition);
+	void Initialize(XMFLOAT3 hPosition, XMFLOAT3 pPosition, float saveAngle);
 	//終了
 	void Finalize();
 	// 毎フレーム処理

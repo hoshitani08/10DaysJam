@@ -46,28 +46,16 @@ void Human::Draw()
 	human_->Draw();
 }
 
-void Human::Move()
+void Human::Move(float angle, XMFLOAT2 speed)
 {
 	Input* input = Input::GetInstance();
 
 	position_ = human_->GetPosition();
-	XMFLOAT2 vector = { input->GetMousePoint().x - position_.x, input->GetMousePoint().y - position_.y };
-	float v = 0.0f;
 
-	v = sqrtf((vector.x * vector.x) + (vector.y * vector.y));
-	vector = { (vector.x / v) * speed_.y, (vector.y / v) * speed_.y };
+	float hSpeed = (float)sqrtf((speed.x * speed.x) + (speed.y * speed.y));
 
-	if (vector.x > 0)
-	{
-		speed_.x = 2.5f * vector.x;
-	}
-	else
-	{
-		speed_.x = 2.5f * vector.x;
-	}
-
-	position_.x += speed_.x;
-	position_.y -= speed_.y;
+	position_.x += sinf((angle * 3.14) / 180.0f) * hSpeed * 0.5f;
+	position_.y -= 0.2f;
 
 	human_->SetPosition(position_);
 }

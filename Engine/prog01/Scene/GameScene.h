@@ -113,6 +113,10 @@ private: // メンバ変数
 	OreData goldOre;
 	// 鉄鉱石
 	OreData ironStone;
+	// アングルを保存
+	float saveAngle = 90.0f;
+	// フラグ
+	bool changeFlag = false;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;

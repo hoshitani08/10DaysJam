@@ -129,8 +129,9 @@ void GameScene::Update()
 		SpecialMove();
 		// ブロックの破壊
 		BlockBreak();
+
 		// プレイヤーの動き
-		player_->Move();
+		player_->Move(input->PadStickAngle() + 90, input->PadStickGradient());
 	}
 
 	for (auto a : drill_)
@@ -392,15 +393,25 @@ void GameScene::HitBox()
 {
 	Input* input = Input::GetInstance();
 
-	float angle = input->GetMousePoint().x;
-
-	if (angle <= -90)
+	if (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f)
 	{
-		angle = -90;
+		saveAngle = input->PadStickAngle();
 	}
-	else if (angle >= 90)
+
+	if (saveAngle < 0)
 	{
-		angle = 90;
+		saveAngle *= -1;
+	}
+
+	DebugText::GetInstance()->VariablePrint(0, 180, "saveAngle", saveAngle, 1.0f);
+
+	if (saveAngle > 180)
+	{
+		saveAngle = 180;
+	}
+	else if (saveAngle <= 0)
+	{
+		saveAngle = 0;
 	}
 
 	float count = 0.0f;
@@ -422,8 +433,8 @@ void GameScene::HitBox()
 			length.y = 3.0f;
 		}
 
-		float rad = (angle + 90 + count) * 3.14159265359f / 180.0f;
-		XMFLOAT2 around = { -cos(rad) * length.x / 1.0f, -sin(rad) * length.y / 1.0f };
+		float rad = (saveAngle + count) * 3.14159265359f / 180.0f;
+		XMFLOAT2 around = { cosf(rad) * length.x / 1.0f, -sinf(rad) * length.y / 1.0f };
 		XMFLOAT3 wPos = hit_[i]->GetPosition();
 
 		wPos.x = around.x + player_->GetPosition().x;
@@ -534,11 +545,11 @@ void GameScene::SpecialMove()
 {
 	Input* input = Input::GetInstance();
 
-	if (input->TriggerMouseLeft())
+	if (input->TriggerPadKey(BUTTON_A))
 	{
 		Drill* drill = new Drill;
 
-		drill->Initialize(hit_[0]->GetPosition(), player_->GetPosition(), input->GetMousePoint());
+		drill->Initialize(hit_[0]->GetPosition(), player_->GetPosition(), saveAngle);
 
 		drill_.push_back(drill);
 		ui_->SetSaveFuel(-50);

@@ -11,6 +11,11 @@ void SpriteFactory::Initialize()
 	DebugText::GetInstance()->Initialize(0);
 
 	// テクスチャ読み込み
+	// マウスカーソル
+	if (!Sprite::LoadTexture(1, L"Resources/sprite/drill.png"))
+	{
+		assert(0);
+	}
 }
 
 SpriteFactory* SpriteFactory::GetInstance()
