@@ -257,7 +257,7 @@ void GameScene::BlockCreate(std::string fName)
 			if (MapChip::GetInstance()->GetChipNum(j, i, fName) != 0)
 			{
 				Block* a = new Block();
-				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, (((-i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (60 * createCount_) + 30), 0 });
+				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, (((-i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (60 * createCount_) + 82), 0 });
 				box_.push_back(a);
 			}
 		}
@@ -279,7 +279,7 @@ void GameScene::BlockBreak()
 	{
 		Box enemy;
 		enemy.center = { a->GetPosition().x, a->GetPosition().y, a->GetPosition().z, 0 };
-		enemy.scale = a->GetScale();
+		enemy.scale = { a->GetScale().x * START_SCALE, a->GetScale().x * START_SCALE, a->GetScale().x * START_SCALE };
 
 		for (int i = 0; i < hit_.size(); i++)
 		{
@@ -380,7 +380,14 @@ void GameScene::BlockBreak()
 		count++;
 	}
 
-	if (player_->GetPosition().y <= (4 * -dugCount_))
+	if (box_[0]->GetPosition().y - box_[0]->GetScale().y > player_->GetPosition().y && dugCount_ == 0)
+	{
+		dugCount_++;
+		ui_->DugDistanceCalculate(1.0f);
+		ui_->AddScore(10);
+		ui_->SetSaveFuel(-10);
+	}
+	else if (player_->GetPosition().y <= (4 * -dugCount_) && dugCount_ != 0)
 	{
 		ui_->DugDistanceCalculate(1.0f);
 		ui_->AddScore(10);
@@ -671,16 +678,16 @@ void GameScene::PlayerMove()
 
 	gravity += 0.2f;
 
-	if (gravity >= 1.0f)
+	if (gravity >= 0.6f)
 	{
-		gravity = 1.0f;
+		gravity = 0.6f;
 	}
 
 	for (auto a : box_)
 	{
 		Box enemy;
 		enemy.center = { a->GetPosition().x, a->GetPosition().y, a->GetPosition().z, 0 };
-		enemy.scale = a->GetScale();
+		enemy.scale = { a->GetScale().x * START_SCALE, a->GetScale().x * START_SCALE, a->GetScale().x * START_SCALE };
 
 		for (int i = 0; i < hit_.size(); i++)
 		{

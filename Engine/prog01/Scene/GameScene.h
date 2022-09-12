@@ -58,6 +58,7 @@ private: // 静的定数
 
 private: // 定数
 	const XMFLOAT2 RESTRICTION_ANGLE = { 360.0f, 80.0f };
+	const float START_SCALE = 1.2f;
 
 public: // メンバ関数
 	// デストラクタ
@@ -110,7 +111,7 @@ private: // メンバ変数
 	// 生成のカウント
 	int createCount_ = 0;
 	// 進んだ距離のカウント
-	int dugCount_ = 5;
+	int dugCount_ = 0;
 	// 金鉱石
 	OreData goldOre;
 	// 鉄鉱石
