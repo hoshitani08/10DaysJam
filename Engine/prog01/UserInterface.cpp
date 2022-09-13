@@ -1,6 +1,8 @@
 #include "UserInterface.h"
 #include "DebugText.h"
 
+UserInterface::NumberData UserInterface::score_ = {};
+
 void UserInterface::Initialize()
 {
 }
@@ -127,9 +129,9 @@ void UserInterface::Calculate()
 		fuel_.point += 1;
 		fuel_.savePoint--;
 
-		if (fuel_.point >= 500)
+		if (fuel_.point >= MAX_FUEL)
 		{
-			fuel_.point = 500;
+			fuel_.point = MAX_FUEL;
 			fuel_.savePoint = 0;
 		}
 	}

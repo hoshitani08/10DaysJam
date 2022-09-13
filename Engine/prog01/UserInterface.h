@@ -39,6 +39,9 @@ public: // サブクラス
 		float point = 0.0f;
 	};
 
+private: // 定数
+	const float MAX_FUEL = 5000;
+
 public: // メンバ関数
 	// コンストラクタ
 	UserInterface() = default;
@@ -75,11 +78,13 @@ public: // メンバ関数
 	// 燃料の残量取得
 	float GetFuel() { return fuel_.point; }
 
+private: // 静的メンバ変数
+	// スコア
+	static NumberData score_;
+
 private: // メンバ変数
 	// 掘った距離
 	NumberData dugDistance_ = {};
-	// スコア
-	NumberData score_ = { 0.0f, 0.0f };
 	// 燃料
 	NumberData fuel_ = { 0.0f, 5000.0f };
 	//　サーベルタイガーのパーツのデータ

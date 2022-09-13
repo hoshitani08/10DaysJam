@@ -110,6 +110,7 @@ private: // メンバ変数
 	bool flag = false;
 	// 生成のカウント
 	int createCount_ = 0;
+	std::vector<int> createSaveCount_;
 	// 進んだ距離のカウント
 	int dugCount_ = 0;
 	// 金鉱石

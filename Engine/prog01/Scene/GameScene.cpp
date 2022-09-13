@@ -82,8 +82,19 @@ void GameScene::Initialize()
 	MapChip::GetInstance()->CsvLoad(15, 15, "map10");
 	MapChip::GetInstance()->CsvLoad(15, 15, "map11");
 	MapChip::GetInstance()->CsvLoad(15, 15, "map12");
-
-	//BlockCreate("sampleMap");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map13");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map14");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map15");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map16");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map17");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map18");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map19");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map20");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map21");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map22");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map23");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map24");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map25");
 
 	// FBXオブジェクト生成
 
@@ -177,7 +188,7 @@ void GameScene::Draw()
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
 	// 背景スプライト描画
-	
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -249,7 +260,7 @@ void GameScene::EffectDraw()
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
-	
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
@@ -471,15 +482,50 @@ void GameScene::StageCreate()
 	if (player_->GetPosition().y <= -createCount_ * 10 && box_.size() < 450)
 	{
 		createCount_++;
+		// ランダムで出た数
 		int count = 0;
+		// ランダムの最大値
+		int maxCount = 0;
+		// 作らないマップの数字を保存
+		std::array<int, 10> saveCount = {};
+		for (int i = 0; i < createSaveCount_.size(); i++)
+		{
+			saveCount[i] = createSaveCount_[i];
+		}
+
+		if (createCount_ < 10)
+		{
+			maxCount = 14;
+		}
+		else
+		{
+			maxCount = 26;
+		}
+
 		do
 		{
-			count = rand() % 13;
-		} while (count == 0);
+			count = rand() % maxCount;
+		} while (count == 0 ||
+			count == saveCount[0] ||
+			count == saveCount[1] ||
+			count == saveCount[2] ||
+			count == saveCount[3] ||
+			count == saveCount[4] ||
+			count == saveCount[5] ||
+			count == saveCount[6] ||
+			count == saveCount[7] ||
+			count == saveCount[8] ||
+			count == saveCount[9]);
 
 		if (createCount_ <= 1)
 		{
 			count = 0;
+		}
+
+		createSaveCount_.push_back(count);
+		if (createSaveCount_.size() >= 10)
+		{
+			createSaveCount_.erase(createSaveCount_.begin());
 		}
 
 		if (count == 0)
@@ -534,6 +580,58 @@ void GameScene::StageCreate()
 		{
 			BlockCreate("map12");
 		}
+		else if (count == 13)
+		{
+			BlockCreate("map13");
+		}
+		else if (count == 14)
+		{
+			BlockCreate("map14");
+		}
+		else if (count == 15)
+		{
+			BlockCreate("map15");
+		}
+		else if (count == 16)
+		{
+			BlockCreate("map16");
+		}
+		else if (count == 17)
+		{
+			BlockCreate("map17");
+		}
+		else if (count == 18)
+		{
+			BlockCreate("map18");
+		}
+		else if (count == 19)
+		{
+			BlockCreate("map19");
+		}
+		else if (count == 20)
+		{
+			BlockCreate("map20");
+		}
+		else if (count == 21)
+		{
+			BlockCreate("map21");
+		}
+		else if (count == 22)
+		{
+			BlockCreate("map22");
+		}
+		else if (count == 23)
+		{
+			BlockCreate("map23");
+		}
+		else if (count == 24)
+		{
+			BlockCreate("map24");
+		}
+		else if (count == 25)
+		{
+			BlockCreate("map25");
+		}
 	}
 }
 
@@ -563,7 +661,7 @@ void GameScene::OreBuff()
 		DebugText::GetInstance()->Print("ironStone.flag = false", 0, 80, 1.0f);
 	}
 
-	DebugText::GetInstance()->VariablePrint(0, 64 ,"goldOre.timer", goldOre.timer, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 64, "goldOre.timer", goldOre.timer, 1.0f);
 	DebugText::GetInstance()->VariablePrint(0, 96, "ironStone.timer", ironStone.timer, 1.0f);
 }
 
