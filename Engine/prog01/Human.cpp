@@ -65,6 +65,15 @@ void Human::Move(float angle, XMFLOAT2 gradient, float gravity)
 	position_.x += vector;
 	position_.y -= gravity_;
 
+	if (position_.x < -30)
+	{
+		position_.x = -30;
+	}
+	else if (position_.x > 26)
+	{
+		position_.x = 26;
+	}
+
 	human_->SetPosition(position_);
 }
 

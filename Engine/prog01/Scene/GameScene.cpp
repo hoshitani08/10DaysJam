@@ -164,6 +164,9 @@ void GameScene::Update()
 		PlayerEndMove();
 	}
 
+	DebugText::GetInstance()->VariablePrint(0, 180, "", box_[0]->GetPosition().x, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 196, "", box_[14]->GetPosition().x, 1.0f);
+
 	for (auto a : drill_)
 	{
 		a->Update(player_->GetPosition());
@@ -413,8 +416,6 @@ void GameScene::HitBox()
 	{
 		saveAngle *= -1;
 	}
-
-	DebugText::GetInstance()->VariablePrint(0, 180, "saveAngle", saveAngle, 1.0f);
 
 	if (saveAngle > 180)
 	{
