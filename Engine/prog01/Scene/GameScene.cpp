@@ -159,10 +159,14 @@ void GameScene::Update()
 			PlayerMove();
 		}
 	}
+	else
+	{
+		PlayerEndMove();
+	}
 
 	for (auto a : drill_)
 	{
-		a->Update();
+		a->Update(player_->GetPosition());
 	}
 
 	player_->Update();
@@ -796,4 +800,52 @@ void GameScene::PlayerMove()
 	{
 		player_->HitBox(a);
 	}
+}
+
+void GameScene::PlayerEndMove()
+{
+	for (auto box : box_)
+	{
+		Box enemy;
+		enemy.center = { box->GetPosition().x, box->GetPosition().y, box->GetPosition().z, 0 };
+		enemy.scale = { box->GetScale().x * 1.2f, box->GetScale().x * 1.2f, box->GetScale().x * 1.2f };
+
+		Sphere player[3];
+		player[0].center = { player_->GetPosition().x - 1.2f, player_->GetPosition().y    , player_->GetPosition().z, 0 };
+		player[0].radius = 1;
+		player[1].center = { player_->GetPosition().x + 1.2f, player_->GetPosition().y    , player_->GetPosition().z, 0 };
+		player[1].radius = 1;
+		player[2].center = { player_->GetPosition().x    , player_->GetPosition().y - 1, player_->GetPosition().z, 0 };
+		player[2].radius = 1;
+
+		for (int i = 0; i < _countof(player); i++)
+		{
+			if (box->GetType() == Block::SOIL && Collision::CheckSphere2Box(player[i], enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (box->GetType() == Block::ROCK && Collision::CheckSphere2Box(player[i], enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (box->GetType() == Block::COAL && Collision::CheckSphere2Box(player[i], enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (box->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player[i], enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (box->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player[i], enemy))
+			{
+				gravity = 0.0f;
+			}
+			else if (box->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player[i], enemy))
+			{
+				gravity = 0.0f;
+			}
+		}
+	}
+
+	player_->EndMove(gravity);
 }

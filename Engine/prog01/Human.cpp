@@ -67,6 +67,13 @@ void Human::Move(float angle, XMFLOAT2 gradient, float gravity)
 	human_->SetPosition(position_);
 }
 
+void Human::EndMove(float gravity)
+{
+	position_.y -= gravity;
+
+	human_->SetPosition(position_);
+}
+
 void Human::HitBox(Block* box)
 {
 	Box enemy;

@@ -32,6 +32,7 @@ public: // ƒƒ“ƒoŠÖ”
 	void Draw();
 	// “®‚«
 	void Move(float angle, XMFLOAT2 speed, float gravity);
+	void EndMove(float gravity);
 	// “–‚½‚è”»’è
 	void HitBox(Block* box);
 
@@ -59,4 +60,6 @@ private: // ƒƒ“ƒo•Ï”
 	XMFLOAT3 scale_ = {2,2,2};
 	// d—Í
 	float gravity_ = 0.0f;
+	// €‚ñ‚¾Œã‚É“–‚½‚Á‚½‚©
+	bool isDeathHit = false;
 };

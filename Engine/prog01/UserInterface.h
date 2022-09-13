@@ -86,7 +86,7 @@ private: // メンバ変数
 	// 掘った距離
 	NumberData dugDistance_ = {};
 	// 燃料
-	NumberData fuel_ = { 0.0f, 5000.0f };
+	NumberData fuel_ = { 0.0f, MAX_FUEL };
 	//　サーベルタイガーのパーツのデータ
 	std::vector<SParts> sBone_;
 	// ティラノサウルスのパーツのデータ

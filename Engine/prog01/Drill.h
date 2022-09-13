@@ -28,7 +28,7 @@ public: // メンバ関数
 	//終了
 	void Finalize();
 	// 毎フレーム処理
-	void Update();
+	void Update(XMFLOAT3 pPosition);
 	// 描画
 	void Draw();
 

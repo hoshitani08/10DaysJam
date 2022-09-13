@@ -47,12 +47,6 @@ public: // サブクラス
 		bool flag = false;
 	};
 
-	struct DrillData
-	{
-		std::unique_ptr<Object3d> object;
-		
-	};
-
 private: // 静的定数
 	static const int DEBUG_TEXT_TEX_NUMBER = 0;
 
@@ -90,6 +84,8 @@ public: // メンバ関数
 	void SpecialMove();
 	// プレイヤーの動き
 	void PlayerMove();
+	// プレイヤーの最後の動き
+	void PlayerEndMove();
 
 private: // メンバ変数
 	//カメラ
@@ -123,6 +119,8 @@ private: // メンバ変数
 	float coolTimer = 0.0f;
 	// 採掘可能か
 	bool isMining = false;
+	// 最後の重力
+	float gravity = 0.2f;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;
