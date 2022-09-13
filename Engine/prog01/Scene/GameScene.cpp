@@ -314,13 +314,13 @@ void GameScene::BlockBreak()
 			player.center = { hit_[i]->GetPosition().x, hit_[i]->GetPosition().y, hit_[i]->GetPosition().z, 0 };
 			player.radius = 2;
 
-			if (a->GetType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
+			if (a->GetBlockType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 				isMining = false;
 			}
-			else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
@@ -331,68 +331,42 @@ void GameScene::BlockBreak()
 				}
 				isMining = false;
 			}
-			else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 				ui_->SetSaveFuel(100);
 				isMining = false;
 			}
-			else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 				ironStone.flag = true;
 				isMining = false;
 			}
-			else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 				goldOre.flag = true;
 				isMining = false;
 			}
-			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
 			{
 				ui_->AddScore(1000);
+				if (a->GetFossilType() == Block::PTER)
+				{
+					ui_->PBoneScore(a->GetPParts());
+				}
+				else if (a->GetFossilType() == Block::TREX)
+				{
+					ui_->TBoneScore(a->GetTParts());
+				}
 				delete a;
 				box_.erase(box_.begin() + count);
 
 				isMining = false;
-
-				int typeCount = 0;
-				typeCount = rand() % 3;
-
-				if (typeCount == 1)
-				{
-					// サーベルタイガー
-					typeCount = rand() % 2;
-					if (typeCount == 0)
-					{
-						ui_->SBoneScore({ true, false });
-					}
-					else
-					{
-						ui_->SBoneScore({ false, true });
-					}
-				}
-				else if (typeCount == 2)
-				{
-					// ティラノサウルス
-					typeCount = rand() % 3;
-					if (typeCount == 0)
-					{
-						ui_->TBoneScore({ true, false });
-					}
-					else if (typeCount == 1)
-					{
-						ui_->TBoneScore({ false, true, false });
-					}
-					else
-					{
-						ui_->TBoneScore({ false, false ,true });
-					}
-				}
 			}
 		}
 
@@ -700,80 +674,54 @@ void GameScene::SpecialMove()
 			player.center = { pos.x, pos.y, pos.z, 0 };
 			player.radius = 2;
 
-			if (a->GetType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
+			if (a->GetBlockType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 
 				b->AddCount(1);
 			}
-			else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 				b->AddCount(1);
 			}
-			else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 				b->AddCount(1);
 				ui_->SetSaveFuel(100);
 			}
-			else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 				b->AddCount(1);
 				ironStone.flag = true;
 			}
-			else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
 				b->AddCount(1);
 				goldOre.flag = true;
 			}
-			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
+			else if (a->GetBlockType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
 			{
 				ui_->AddScore(1000);
+				if (a->GetFossilType() == Block::PTER)
+				{
+					ui_->PBoneScore(a->GetPParts());
+				}
+				else if (a->GetFossilType() == Block::TREX)
+				{
+					ui_->TBoneScore(a->GetTParts());
+				}
 				delete a;
 				box_.erase(box_.begin() + count);
 				b->AddCount(1);
-
-				int typeCount = 0;
-				typeCount = rand() % 3;
-
-				if (typeCount == 1)
-				{
-					// サーベルタイガー
-					typeCount = rand() % 2;
-					if (typeCount == 0)
-					{
-						ui_->SBoneScore({ true, false });
-					}
-					else
-					{
-						ui_->SBoneScore({ false, true });
-					}
-				}
-				else if (typeCount == 2)
-				{
-					// ティラノサウルス
-					typeCount = rand() % 3;
-					if (typeCount == 0)
-					{
-						ui_->TBoneScore({ true, false });
-					}
-					else if (typeCount == 1)
-					{
-						ui_->TBoneScore({ false, true, false });
-					}
-					else
-					{
-						ui_->TBoneScore({ false, false ,true });
-					}
-				}
 			}
 
 			if (b->GetFlag())
@@ -820,27 +768,27 @@ void GameScene::PlayerEndMove()
 
 		for (int i = 0; i < _countof(player); i++)
 		{
-			if (box->GetType() == Block::SOIL && Collision::CheckSphere2Box(player[i], enemy))
+			if (box->GetBlockType() == Block::SOIL && Collision::CheckSphere2Box(player[i], enemy))
 			{
 				gravity = 0.0f;
 			}
-			else if (box->GetType() == Block::ROCK && Collision::CheckSphere2Box(player[i], enemy))
+			else if (box->GetBlockType() == Block::ROCK && Collision::CheckSphere2Box(player[i], enemy))
 			{
 				gravity = 0.0f;
 			}
-			else if (box->GetType() == Block::COAL && Collision::CheckSphere2Box(player[i], enemy))
+			else if (box->GetBlockType() == Block::COAL && Collision::CheckSphere2Box(player[i], enemy))
 			{
 				gravity = 0.0f;
 			}
-			else if (box->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player[i], enemy))
+			else if (box->GetBlockType() == Block::IRONSTONE && Collision::CheckSphere2Box(player[i], enemy))
 			{
 				gravity = 0.0f;
 			}
-			else if (box->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player[i], enemy))
+			else if (box->GetBlockType() == Block::GOLDORE && Collision::CheckSphere2Box(player[i], enemy))
 			{
 				gravity = 0.0f;
 			}
-			else if (box->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player[i], enemy))
+			else if (box->GetBlockType() == Block::FOSSIL && Collision::CheckSphere2Box(player[i], enemy))
 			{
 				gravity = 0.0f;
 			}

@@ -34,7 +34,7 @@ void UserInterface::CompleteCalculate()
 
 	for (auto a : tBone_)
 	{
-		if (a.head && a.body && a.tail)
+		if (a.skull && a.torso && a.leg && a.upTail && a.lowTail)
 		{
 			AddScore(7500);
 			tBone_.erase(tBone_.begin() + count);
@@ -44,36 +44,46 @@ void UserInterface::CompleteCalculate()
 
 	count = 0;
 
-	for (auto a : sBone_)
+	for (auto a : pBone_)
 	{
-		if (a.upperBody && a.lowerBody)
+		if (a.skull &&  a.upBody && a.lowBody)
 		{
 			AddScore(5000);
-			sBone_.erase(sBone_.begin() + count);
+			pBone_.erase(pBone_.begin() + count);
 		}
 		count++;
 	}
 }
 
-void UserInterface::TBoneScore(TParts tBone)
+void UserInterface::TBoneScore(Block::TParts tBone)
 {
 	int count = 0;
 
 	for (auto a : tBone_)
 	{
-		if (!a.head && tBone.head)
+		if (!a.skull && tBone.skull)
 		{
-			a.head = tBone.head;
+			a.skull = tBone.skull;
 			break;
 		}
-		else if (!a.body && tBone.body)
+		else if (!a.torso && tBone.torso)
 		{
-			a.body = tBone.body;
+			a.torso = tBone.torso;
 			break;
 		}
-		else if (!a.tail && tBone.tail)
+		else if (!a.leg && tBone.leg)
 		{
-			a.tail = tBone.tail;
+			a.leg = tBone.leg;
+			break;
+		}
+		else if (!a.upTail && tBone.upTail)
+		{
+			a.upTail = tBone.upTail;
+			break;
+		}
+		else if (!a.lowTail && tBone.lowTail)
+		{
+			a.lowTail = tBone.lowTail;
 			break;
 		}
 		else if(count >= tBone_.size())
@@ -83,30 +93,45 @@ void UserInterface::TBoneScore(TParts tBone)
 
 		count++;
 	}
+
+	if (tBone_.size() == 0)
+	{
+		tBone_.push_back(tBone);
+	}
 }
 
-void UserInterface::SBoneScore(SParts sBone)
+void UserInterface::PBoneScore(Block::PParts pBone)
 {
 	int count = 0;
 
-	for (auto a : sBone_)
+	for (auto a : pBone_)
 	{
-		if (!a.upperBody && sBone.upperBody)
+		if (!a.skull && pBone.skull)
 		{
-			a.upperBody = sBone.upperBody;
+			a.skull = pBone.skull;
 			break;
 		}
-		else if (!a.lowerBody && sBone.lowerBody)
+		else if (!a.upBody && pBone.upBody)
 		{
-			a.lowerBody = sBone.lowerBody;
+			a.upBody = pBone.upBody;
 			break;
 		}
-		else if (count >= sBone_.size())
+		else if (!a.lowBody && pBone.lowBody)
 		{
-			sBone_.push_back(sBone);
+			a.lowBody = pBone.lowBody;
+			break;
+		}
+		else if (count >= pBone_.size())
+		{
+			pBone_.push_back(pBone);
 		}
 
 		count++;
+	}
+
+	if (pBone_.size() == 0)
+	{
+		pBone_.push_back(pBone);
 	}
 }
 

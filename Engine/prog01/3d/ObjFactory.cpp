@@ -17,6 +17,20 @@ void ObjFactory::Initialize()
 	LoadModel("sampleIron1");
 	// 金鉱石
 	LoadModel("sampleGold1");
+	// アンモナイト
+	LoadModel("ammonite");
+	// プテラ
+	LoadModel("pterSkull");
+	LoadModel("pterUpBody");
+	LoadModel("pterLowBody");
+	// ティラノサウルス
+	LoadModel("T-RexSkull");
+	LoadModel("T-RexTorso");
+	LoadModel("T-RexLeg");
+	LoadModel("T-RexUpTail");
+	LoadModel("T-RexLowTail");
+	// プレイヤー
+	LoadModel("samplePlayer");
 }
 
 void ObjFactory::Finalize()

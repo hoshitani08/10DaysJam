@@ -28,11 +28,32 @@ public: // サブクラス
 		IRONSTONE, // 鉄鉱石
 		GOLDORE,   // 金鉱石
 		FOSSIL,    // 化石
-
-
-		LAVA,      // マグマ
 		MAX
 	} BLOCK_TYPE;
+
+	typedef enum
+	{
+		AMMONITE,
+		PTER,
+		TREX,
+	} FOSSIL_TYPE;
+
+	// プテラ
+	struct PParts
+	{
+		bool skull = false;
+		bool upBody = false;
+		bool lowBody = false;
+	};
+	// ティラノサウルス
+	struct TParts
+	{
+		bool skull = false;
+		bool torso = false;
+		bool leg = false;
+		bool upTail = false;
+		bool lowTail = false;
+	};
 
 private: // 定数
 	const XMFLOAT3 START_SCALE = { 2.0f, 2.0f, 2.0f };
@@ -62,7 +83,10 @@ public: // メンバ関数
 	// スケールの設定
 	void SetScale(XMFLOAT3 scale);
 	// タイプの取得
-	BLOCK_TYPE GetType() { return type_; }
+	BLOCK_TYPE GetBlockType() { return blockType_; }
+	FOSSIL_TYPE GetFossilType() { return fossilType_; }
+	PParts GetPParts() { return pter_; }
+	TParts GetTParts() { return trex_; }
 
 private: // メンバ変数
 	// モデル
@@ -74,5 +98,8 @@ private: // メンバ変数
 	// スケール
 	XMFLOAT3 scale_ = {};
 	// タイプ
-	BLOCK_TYPE type_;
+	BLOCK_TYPE blockType_;
+	FOSSIL_TYPE fossilType_;
+	PParts pter_ = {};
+	TParts trex_ = {};
 };

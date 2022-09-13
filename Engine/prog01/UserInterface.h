@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Sprite.h"
+#include "Block.h"
 
 class UserInterface
 {
@@ -19,20 +20,6 @@ private: // エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 
 public: // サブクラス
-	// サーベルタイガー
-	struct SParts
-	{
-		bool upperBody = false;
-		bool lowerBody = false;
-	};
-	// ティラノサウルス
-	struct TParts
-	{
-		bool head = false;
-		bool body = false;
-		bool tail = false;
-	};
-
 	struct NumberData
 	{
 		float savePoint = 0.0f;
@@ -60,9 +47,9 @@ public: // メンバ関数
 	// 化石が一式揃ったときの計算
 	void CompleteCalculate();
 	// ティラノサウルスのスコア
-	void TBoneScore(TParts tBone);
-	// サーベルタイガーのスコア
-	void SBoneScore(SParts sBone);
+	void TBoneScore(Block::TParts tBone);
+	// プテラのスコア
+	void PBoneScore(Block::PParts pBone);
 	// スコアを足す
 	void AddScore(float score) { score_.savePoint += score; }
 	// 掘った距離の計算
@@ -88,7 +75,7 @@ private: // メンバ変数
 	// 燃料
 	NumberData fuel_ = { 0.0f, MAX_FUEL };
 	//　サーベルタイガーのパーツのデータ
-	std::vector<SParts> sBone_;
+	std::vector<Block::PParts> pBone_;
 	// ティラノサウルスのパーツのデータ
-	std::vector<TParts> tBone_;
+	std::vector<Block::TParts> tBone_;
 };

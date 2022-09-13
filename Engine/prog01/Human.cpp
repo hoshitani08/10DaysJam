@@ -24,8 +24,9 @@ std::unique_ptr<Human> Human::Create()
 
 void Human::Initialize()
 {
-	human_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+	human_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("samplePlayer"));
 	human_->SetPosition({ 0,3,0 });
+	human_->SetRotation({ 0,90,0 });
 	human_->SetScale(scale_);
 }
 
@@ -92,7 +93,7 @@ void Human::HitBox(Block* box)
 
 	for (int i = 0; i < _countof(player); i++)
 	{
-		if (box->GetType() == Block::SOIL && Collision::CheckSphere2Box(player[i], enemy))
+		if (box->GetBlockType() == Block::SOIL && Collision::CheckSphere2Box(player[i], enemy))
 		{
 			if (i == 0)
 			{
@@ -130,7 +131,7 @@ void Human::HitBox(Block* box)
 
 			gravity_ = 0.0f;
 		}
-		else if (box->GetType() == Block::ROCK && Collision::CheckSphere2Box(player[i], enemy))
+		else if (box->GetBlockType() == Block::ROCK && Collision::CheckSphere2Box(player[i], enemy))
 		{
 			if (i == 0)
 			{
@@ -168,7 +169,7 @@ void Human::HitBox(Block* box)
 
 			gravity_ = 0.0f;
 		}
-		else if (box->GetType() == Block::COAL && Collision::CheckSphere2Box(player[i], enemy))
+		else if (box->GetBlockType() == Block::COAL && Collision::CheckSphere2Box(player[i], enemy))
 		{
 			if (i == 0)
 			{
@@ -206,7 +207,7 @@ void Human::HitBox(Block* box)
 
 			gravity_ = 0.0f;
 		}
-		else if (box->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player[i], enemy))
+		else if (box->GetBlockType() == Block::IRONSTONE && Collision::CheckSphere2Box(player[i], enemy))
 		{
 			if (i == 0)
 			{
@@ -244,7 +245,7 @@ void Human::HitBox(Block* box)
 
 			gravity_ = 0.0f;
 		}
-		else if (box->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player[i], enemy))
+		else if (box->GetBlockType() == Block::GOLDORE && Collision::CheckSphere2Box(player[i], enemy))
 		{
 			if (i == 0)
 			{
@@ -282,7 +283,7 @@ void Human::HitBox(Block* box)
 
 			gravity_ = 0.0f;
 		}
-		else if (box->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player[i], enemy))
+		else if (box->GetBlockType() == Block::FOSSIL && Collision::CheckSphere2Box(player[i], enemy))
 		{
 			if (i == 0)
 			{
