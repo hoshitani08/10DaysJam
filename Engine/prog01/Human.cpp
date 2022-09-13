@@ -74,9 +74,9 @@ void Human::HitBox(Block* box)
 	enemy.scale = { box->GetScale().x * 1.2f, box->GetScale().x * 1.2f, box->GetScale().x * 1.2f };
 
 	Sphere player[3];
-	player[0].center = { human_->GetPosition().x - 0.4f, human_->GetPosition().y    , human_->GetPosition().z, 0 };
+	player[0].center = { human_->GetPosition().x - 1.2f, human_->GetPosition().y    , human_->GetPosition().z, 0 };
 	player[0].radius = 1;
-	player[1].center = { human_->GetPosition().x + 0.4f, human_->GetPosition().y    , human_->GetPosition().z, 0 };
+	player[1].center = { human_->GetPosition().x + 1.2f, human_->GetPosition().y    , human_->GetPosition().z, 0 };
 	player[1].radius = 1;
 	player[2].center = { human_->GetPosition().x    , human_->GetPosition().y - 1, human_->GetPosition().z, 0 };
 	player[2].radius = 1;

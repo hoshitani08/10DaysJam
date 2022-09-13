@@ -437,7 +437,7 @@ void GameScene::HitBox()
 	}
 
 	float count = 0.0f;
-	XMFLOAT2 length = { 1.0f, 1.0f };
+	XMFLOAT2 length = { 2.5f, 2.5f };
 	for (int i = 0; i < hit_.size(); i++)
 	{
 		if (i == 1)
@@ -451,8 +451,8 @@ void GameScene::HitBox()
 
 		if (i != 0)
 		{
-			length.x = 1.5f;
-			length.y = 1.5f;
+			length.x = 3.0f;
+			length.y = 3.0f;
 		}
 
 		float rad = (saveAngle + count) * 3.14159265359f / 180.0f;
