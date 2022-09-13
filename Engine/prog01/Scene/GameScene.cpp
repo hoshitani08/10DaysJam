@@ -120,18 +120,33 @@ void GameScene::Update()
 	particleMan_->Update();
 	// ステージ生成
 	StageCreate();
+	// ヒットボックス
+	HitBox();
 	if (ui_->GetFuel() > 0)
 	{
-		// ヒットボックス
-		HitBox();
 		// 鉱石の効果
 		OreBuff();
 		// 左クリック
 		SpecialMove();
-		// ブロックの破壊
-		BlockBreak();
-		// プレイヤーの動き
-		PlayerMove();
+
+		if (!isMining)
+		{
+			coolTimer++;
+
+			if (coolTimer > 10)
+			{
+				isMining = true;
+				coolTimer = 0;
+			}
+		}
+
+		if (isMining)
+		{
+			// ブロックの破壊
+			BlockBreak();
+			// プレイヤーの動き
+			PlayerMove();
+		}
 	}
 
 	for (auto a : drill_)
@@ -209,14 +224,6 @@ void GameScene::EffectDraw()
 	// 3Dオブクジェクトの描画
 	Object3d::PreDraw(cmdList);
 	player_->Draw();
-	for (int i = 0; i < hit_.size(); i++)
-	{
-		if (!goldOre.flag && i != 0)
-		{
-			break;
-		}
-		hit_[i]->Draw();
-	}
 
 	for (auto a : drill_)
 	{
@@ -296,6 +303,7 @@ void GameScene::BlockBreak()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
+				isMining = false;
 			}
 			else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
 			{
@@ -306,33 +314,36 @@ void GameScene::BlockBreak()
 				{
 					ui_->SetSaveFuel(-25);
 				}
+				isMining = false;
 			}
 			else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-
 				ui_->SetSaveFuel(100);
+				isMining = false;
 			}
 			else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-
 				ironStone.flag = true;
+				isMining = false;
 			}
 			else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-
 				goldOre.flag = true;
+				isMining = false;
 			}
 			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
 			{
 				ui_->AddScore(1000);
 				delete a;
 				box_.erase(box_.begin() + count);
+
+				isMining = false;
 
 				int typeCount = 0;
 				typeCount = rand() % 3;
@@ -404,6 +415,10 @@ void GameScene::HitBox()
 	{
 		saveAngle = input->PadStickAngle();
 	}
+	else
+	{
+		saveAngle = 90;
+	}
 
 	if (saveAngle < 0)
 	{
@@ -422,7 +437,7 @@ void GameScene::HitBox()
 	}
 
 	float count = 0.0f;
-	XMFLOAT2 length = { 2.0f, 2.0f };
+	XMFLOAT2 length = { 1.0f, 1.0f };
 	for (int i = 0; i < hit_.size(); i++)
 	{
 		if (i == 1)
@@ -436,8 +451,8 @@ void GameScene::HitBox()
 
 		if (i != 0)
 		{
-			length.x = 3.0f;
-			length.y = 3.0f;
+			length.x = 1.5f;
+			length.y = 1.5f;
 		}
 
 		float rad = (saveAngle + count) * 3.14159265359f / 180.0f;
@@ -676,52 +691,11 @@ void GameScene::PlayerMove()
 {
 	Input* input = Input::GetInstance();
 
-	gravity += 0.2f;
-
-	if (gravity >= 0.6f)
-	{
-		gravity = 0.6f;
-	}
+	// プレイヤーの動き
+	player_->Move(input->PadStickAngle() + 90, input->PadStickGradient(), 0.2f);
 
 	for (auto a : box_)
 	{
-		Box enemy;
-		enemy.center = { a->GetPosition().x, a->GetPosition().y, a->GetPosition().z, 0 };
-		enemy.scale = { a->GetScale().x * START_SCALE, a->GetScale().x * START_SCALE, a->GetScale().x * START_SCALE };
-
-		for (int i = 0; i < hit_.size(); i++)
-		{
-			Sphere player;
-			player.center = { player_->GetPosition().x, player_->GetPosition().y, player_->GetPosition().z, 0 };
-			player.radius = 2;
-
-			if (a->GetType() == Block::SOIL && Collision::CheckSphere2Box(player, enemy))
-			{
-				gravity = 0.0f;
-			}
-			else if (a->GetType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
-			{
-				gravity = 0.0f;
-			}
-			else if (a->GetType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
-			{
-				gravity = 0.0f;
-			}
-			else if (a->GetType() == Block::IRONSTONE && Collision::CheckSphere2Box(player, enemy))
-			{
-				gravity = 0.0f;
-			}
-			else if (a->GetType() == Block::GOLDORE && Collision::CheckSphere2Box(player, enemy))
-			{
-				gravity = 0.0f;
-			}
-			else if (a->GetType() == Block::FOSSIL && Collision::CheckSphere2Box(player, enemy))
-			{
-				gravity = 0.0f;
-			}
-		}
+		player_->HitBox(a);
 	}
-
-	// プレイヤーの動き
-	player_->Move(input->PadStickAngle() + 90, input->PadStickGradient(), gravity);
 }

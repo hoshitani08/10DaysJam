@@ -4,6 +4,7 @@
 
 #include "FbxObject3d.h"
 #include "Object3d.h"
+#include "Block.h"
 
 class Human
 {
@@ -29,8 +30,10 @@ public: // メンバ関数
 	void Update();
 	// 描画
 	void Draw();
-
+	// 動き
 	void Move(float angle, XMFLOAT2 speed, float gravity);
+	// 当たり判定
+	void HitBox(Block* box);
 
 	// 座標の取得
 	const XMFLOAT3& GetPosition() { return position_; }
@@ -54,4 +57,6 @@ private: // メンバ変数
 	XMFLOAT3 rotation_ = {};
 	// スケール
 	XMFLOAT3 scale_ = {2,2,2};
+	// 重力
+	float gravity_ = 0.0f;
 };

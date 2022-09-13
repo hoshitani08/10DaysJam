@@ -118,10 +118,10 @@ private: // メンバ変数
 	OreData ironStone;
 	// アングルを保存
 	float saveAngle = 90.0f;
-	// フラグ
-	bool changeFlag = false;
-	// 重力
-	float gravity = 0.2f;
+	// 待機時間
+	float coolTimer = 0.0f;
+	// 採掘可能か
+	bool isMining = false;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;
