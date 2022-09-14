@@ -42,4 +42,5 @@ public: // ƒƒ“ƒoŠÖ”
 
 private: // ƒƒ“ƒo•Ï”
 
+	bool isSelection = false;
 };

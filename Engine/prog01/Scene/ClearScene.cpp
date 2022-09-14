@@ -3,6 +3,7 @@
 #include "DirectXCommon.h"
 #include "ObjFactory.h"
 #include "Ease.h"
+#include "ChangeScene.h"
 
 ClearScene::~ClearScene()
 {
@@ -21,6 +22,29 @@ void ClearScene::Finalize()
 void ClearScene::Update()
 {
 	Input* input = Input::GetInstance();
+	if (ChangeScene::GetInstance()->GetIsIn())
+	{
+		ChangeScene::GetInstance()->SetIsChange(false);
+	}
+
+	if (input->TriggerPadKey(BUTTON_A))
+	{
+		ChangeScene::GetInstance()->SetIsChange(true);
+	}
+
+	if (ChangeScene::GetInstance()->GetIsIn())
+	{
+		if (isSelection)
+		{
+			SceneManager::GetInstance()->ChangeScene("TitleScene");
+		}
+		else
+		{
+			SceneManager::GetInstance()->ChangeScene("GameScene");
+		}
+	}
+
+	ChangeScene::GetInstance()->Update();
 }
 
 void ClearScene::Draw()
@@ -45,7 +69,7 @@ void ClearScene::Draw()
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
-
+	ChangeScene::GetInstance()->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画

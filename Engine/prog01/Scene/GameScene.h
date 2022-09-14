@@ -91,7 +91,7 @@ private: // メンバ変数
 	//カメラ
 	std::unique_ptr<Camera> camera_;
 	//スプライト
-	std::unique_ptr<Sprite> sprite_;
+	std::unique_ptr<Sprite> frame_;
 	//パーティクル
 	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト

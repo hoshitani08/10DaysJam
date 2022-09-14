@@ -116,6 +116,19 @@ public: //ƒƒ“ƒoŠÖ”
 		return p;
 	};
 
+	XMFLOAT2& GetScreen()
+	{
+		WINDOWINFO windowInfo;
+		windowInfo.cbSize = sizeof(WINDOWINFO);
+		HWND hDesktop = GetDesktopWindow();
+		GetWindowInfo(hDesktop, &windowInfo);
+
+		/*DebugText::GetInstance()->VariablePrint(0, 0, "windowInfo.rcWindow.right", windowInfo.rcWindow.right, 1.0f);
+		DebugText::GetInstance()->VariablePrint(0, 16, "windowInfo.rcWindow.bottom", windowInfo.rcWindow.bottom, 1.0f);*/
+
+		return XMFLOAT2(windowInfo.rcWindow.right, windowInfo.rcWindow.bottom);
+	};
+
 private:
 	Input();
 	~Input();

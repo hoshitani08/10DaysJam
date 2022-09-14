@@ -74,6 +74,8 @@ public: // メンバ関数
 	void SetRotation(float rotation);
 	// 座標の設定
 	void SetPosition(XMFLOAT2 position);
+	// カラー設定
+	void SetColor(XMFLOAT4 _color) { color = _color; }
 	// サイズの設定
 	void SetSize(XMFLOAT2 size);
 	// サイズの取得

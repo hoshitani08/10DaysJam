@@ -3,6 +3,7 @@
 #include "DirectXCommon.h"
 #include "ObjFactory.h"
 #include "Ease.h"
+#include "ChangeScene.h"
 
 TitleScene::~TitleScene()
 {
@@ -11,7 +12,9 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
-	
+	sprite_ = Sprite::Create(1, { 0.0f,0.0f }, { 1,1,1,1 }, {-1.0f,-0.5f});
+
+	ChangeScene::GetInstance()->Initialize();
 }
 
 void TitleScene::Finalize()
@@ -21,6 +24,18 @@ void TitleScene::Finalize()
 void TitleScene::Update()
 {
 	Input* input = Input::GetInstance();
+	
+	if (input->TriggerPadKey(BUTTON_A))
+	{
+		ChangeScene::GetInstance()->SetIsChange(true);
+	}
+
+	if (ChangeScene::GetInstance()->GetIsIn())
+	{
+		SceneManager::GetInstance()->ChangeScene("GameScene");
+	}
+
+	ChangeScene::GetInstance()->Update();
 }
 
 void TitleScene::Draw()
@@ -30,7 +45,7 @@ void TitleScene::Draw()
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
-
+	sprite_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -45,7 +60,9 @@ void TitleScene::Draw()
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
+	DebugText::GetInstance()->DrawAll(cmdList);
 
+	ChangeScene::GetInstance()->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
@@ -58,7 +75,6 @@ void TitleScene::EffectDraw()
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
-
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア

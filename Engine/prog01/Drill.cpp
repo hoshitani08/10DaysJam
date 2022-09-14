@@ -37,7 +37,7 @@ void Drill::Update(XMFLOAT3 pPosition)
 
 	object_->SetPosition(position_);
 
-	if (count_ >= 6 || position_.x >= 30 || position_.x <= -30 || pPosition.y - 100 > position_.y)
+	if (count_ >= 6 || position_.x > 13 || position_.x < -43 || pPosition.y - 100 > position_.y)
 	{
 		flag_ = true;
 	}

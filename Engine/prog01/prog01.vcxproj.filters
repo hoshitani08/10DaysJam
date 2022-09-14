@@ -190,6 +190,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="UserInterface.cpp" />
     <ClCompile Include="Drill.cpp" />
+    <ClCompile Include="ChangeScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -367,6 +368,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="UserInterface.h" />
     <ClInclude Include="Drill.h" />
+    <ClInclude Include="ChangeScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">

@@ -18,6 +18,7 @@
 #include "Audio.h"
 #include "Input.h"
 #include "MapChip.h"
+#include "ChangeScene.h"
 
 using namespace DirectX;
 
@@ -39,9 +40,8 @@ void GameScene::Initialize()
 	FbxObject3d::SetCamera(camera_.get());
 
 	// 背景スプライト生成
-	sprite_ = Sprite::Create(1, { 0.0f,0.0f });
-	sprite_->SetSize({ 100.0f,100.0f });
-	sprite_->SetPosition({ 100.0f,100.0f });
+	frame_ = Sprite::Create(10, { 0.0f,0.0f });
+	//frame_->SetSize(Input::GetInstance()->GetScreen());
 
 	// パーティクルマネージャ生成
 	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
@@ -62,6 +62,7 @@ void GameScene::Initialize()
 
 	// 3Dオブジェクト生成
 	player_ = Human::Create();
+	player_->SetPosition({ ((0 - MapChip::GetInstance()->GetMapChipMaxXY("map00").x / 2) * 4) - 15, player_->GetPosition().y, player_->GetPosition().z });
 
 	for (int i = 0; i < hit_.size(); i++)
 	{
@@ -95,6 +96,11 @@ void GameScene::Initialize()
 	MapChip::GetInstance()->CsvLoad(15, 15, "map23");
 	MapChip::GetInstance()->CsvLoad(15, 15, "map24");
 	MapChip::GetInstance()->CsvLoad(15, 15, "map25");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map26");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map27");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map28");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map29");
+	MapChip::GetInstance()->CsvLoad(15, 15, "map30");
 
 	// FBXオブジェクト生成
 
@@ -135,6 +141,7 @@ void GameScene::Update()
 	HitBox();
 	if (ui_->GetFuel() > 0)
 	{
+		ChangeScene::GetInstance()->SetIsChange(false);
 		// 鉱石の効果
 		OreBuff();
 		// 左クリック
@@ -161,7 +168,13 @@ void GameScene::Update()
 	}
 	else
 	{
+		ChangeScene::GetInstance()->SetIsChange(true);
 		PlayerEndMove();
+
+		if (ChangeScene::GetInstance()->GetIsIn())
+		{
+			SceneManager::GetInstance()->ChangeScene("ClearScene");
+		}
 	}
 
 	DebugText::GetInstance()->VariablePrint(0, 180, "", box_[0]->GetPosition().x, 1.0f);
@@ -185,6 +198,7 @@ void GameScene::Update()
 	CameraMove();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
+	ChangeScene::GetInstance()->Update();
 }
 
 void GameScene::Draw()
@@ -219,6 +233,8 @@ void GameScene::Draw()
 	Sprite::PreDraw(cmdList);
 	// デバッグテキストの描画
 	DebugText::GetInstance()->DrawAll(cmdList);
+	frame_->Draw();
+	ChangeScene::GetInstance()->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
@@ -282,7 +298,7 @@ void GameScene::BlockCreate(std::string fName)
 			if (MapChip::GetInstance()->GetChipNum(j, i, fName) != 0)
 			{
 				Block* a = new Block();
-				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { (j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4, (((-i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (60 * createCount_) + 82), 0 });
+				a->Initialize(MapChip::GetInstance()->GetChipNum(j, i, fName), { ((j - MapChip::GetInstance()->GetMapChipMaxXY(fName).x / 2) * 4) - 13, (((-i - MapChip::GetInstance()->GetMapChipMaxXY(fName).y / 2) * 4) - (60 * createCount_) + 82), 0 });
 				box_.push_back(a);
 			}
 		}
@@ -374,7 +390,7 @@ void GameScene::BlockBreak()
 		}
 
 		//後始末
-		if (a->GetPosition().y >= (player_->GetPosition().y + 15))
+		if (a->GetPosition().y >= (player_->GetPosition().y + 20))
 		{
 			delete a;
 			box_.erase(box_.begin() + count);
@@ -472,13 +488,17 @@ void GameScene::StageCreate()
 			saveCount[i] = createSaveCount_[i];
 		}
 
-		if (createCount_ < 10)
+		if (createCount_ < 15)
 		{
-			maxCount = 14;
+			maxCount = 12;
 		}
-		else
+		else if(createCount_ < 30)
 		{
-			maxCount = 26;
+			maxCount = 21;
+		}
+		else if (createCount_ < 45)
+		{
+			maxCount = 31;
 		}
 
 		do
@@ -610,6 +630,26 @@ void GameScene::StageCreate()
 		else if (count == 25)
 		{
 			BlockCreate("map25");
+		}
+		else if (count == 26)
+		{
+		BlockCreate("map26");
+		}
+		else if (count == 27)
+		{
+		BlockCreate("map27");
+		}
+		else if (count == 28)
+		{
+		BlockCreate("map28");
+		}
+		else if (count == 29)
+		{
+		BlockCreate("map29");
+		}
+		else if (count == 30)
+		{
+		BlockCreate("map30");
 		}
 	}
 }

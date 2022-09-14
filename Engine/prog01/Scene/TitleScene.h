@@ -42,5 +42,6 @@ public: // メンバ関数
 	void EffectDraw() override;
 
 private: // メンバ変数
-	
+	//スプライト
+	std::unique_ptr<Sprite> sprite_;
 };

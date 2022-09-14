@@ -307,6 +307,7 @@
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="ChangeScene.cpp" />
     <ClCompile Include="Collision\Collision.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
     </ClCompile>
@@ -369,6 +370,7 @@
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="ChangeScene.h" />
     <ClInclude Include="Collision\BaseCollider.h" />
     <ClInclude Include="Collision\Collision.h" />
     <ClInclude Include="Collision\CollisionAttribute.h" />
