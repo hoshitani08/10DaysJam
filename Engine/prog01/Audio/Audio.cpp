@@ -136,42 +136,53 @@ void Audio::PlayWave(int soundNumber, float volume)
 
 void Audio::LoopPlayWave(int soundNumber, float volume)
 {
-	SoundData& soundData = soundDatas[soundNumber];
+	LoopSoundData loopSoundData;
+	loopSoundData.soundData = soundDatas[soundNumber];
 
 	HRESULT result;
-
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex, 0, 2.0f, nullptr);
-	pSourceVoice->SetVolume(volume);
+	result = xAudio2->CreateSourceVoice(&loopSoundData.pSourceVoice, &loopSoundData.soundData.wfex, 0, 2.0f, nullptr);
+	loopSoundData.pSourceVoice->SetVolume(volume);
 	assert(SUCCEEDED(result));
-
-	pSourceVoices.push_back(pSourceVoice);
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = (BYTE*)soundData.pBuffer;
-	buf.pContext = soundData.pBuffer;
+	buf.pAudioData = (BYTE*)loopSoundData.soundData.pBuffer;
+	buf.pContext = loopSoundData.soundData.pBuffer;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 	buf.LoopCount = XAUDIO2_LOOP_INFINITE;
-	buf.AudioBytes = soundData.dataSize;
+	buf.AudioBytes = loopSoundData.soundData.dataSize;
 
 	// 波形データの再生
-	result = pSourceVoice->SubmitSourceBuffer(&buf);
+	result = loopSoundData.pSourceVoice->SubmitSourceBuffer(&buf);
 	assert(SUCCEEDED(result));
 
-	result = pSourceVoice->Start();
+	result = loopSoundData.pSourceVoice->Start();
 	assert(SUCCEEDED(result));
+
+	loopSoundDatas.push_back(loopSoundData);
 }
 
 void Audio::LoopStopWave(int soundNumber)
 {
 	HRESULT result;
 
-	if (pSourceVoices.size() != 0 && pSourceVoices.size() >= soundNumber + 1)
+	if (loopSoundDatas.size() != 0)
 	{
-		result = pSourceVoices[soundNumber]->Stop();
-		result = pSourceVoices[soundNumber]->FlushSourceBuffers();
-		result = pSourceVoices[soundNumber]->SubmitSourceBuffer(&buf);
-		pSourceVoices.erase(pSourceVoices.begin() + soundNumber);
+		result = loopSoundDatas[soundNumber - 1].pSourceVoice->Stop();
+		result = loopSoundDatas[soundNumber - 1].pSourceVoice->FlushSourceBuffers();
+		result = loopSoundDatas[soundNumber - 1].pSourceVoice->SubmitSourceBuffer(&buf);
+		loopSoundDatas.erase(loopSoundDatas.begin() + (soundNumber - 1));
 	}
+}
+
+void Audio::LoopSetVolume(int soundNumber, float volume)
+{
+	HRESULT result;
+
+	if (loopSoundDatas.size() != 0)
+	{
+		loopSoundDatas[soundNumber - 1].pSourceVoice->SetVolume(volume);
+		result = loopSoundDatas[soundNumber - 1].pSourceVoice->SubmitSourceBuffer(&buf);
+	}
+	
 }

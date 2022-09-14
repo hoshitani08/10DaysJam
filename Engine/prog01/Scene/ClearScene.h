@@ -9,6 +9,7 @@
 #include "DebugText.h"
 #include "Object3d.h"
 #include "Model.h"
+#include "UserInterface.h"
 
 #include <memory>
 #include <array>
@@ -41,6 +42,11 @@ public: // メンバ関数
 	void EffectDraw() override;
 
 private: // メンバ変数
-
+	//
 	bool isSelection = false;
+	//UI
+	std::unique_ptr<UserInterface> ui_;
+	//スプライト
+	std::array<std::unique_ptr<Sprite>, 6> sprite_;
+	std::unique_ptr<Sprite> backGround_;
 };

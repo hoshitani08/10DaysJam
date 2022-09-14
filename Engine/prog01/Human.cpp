@@ -62,6 +62,15 @@ void Human::Move(float angle, XMFLOAT2 gradient, float gravity)
 		gravity_ = 0.6f;
 	}
 
+	if (input->PushKey(DIK_A))
+	{
+		vector = -1.58f;
+	}
+	else if (input->PushKey(DIK_D))
+	{
+		vector = 1.58f;
+	}
+
 	position_.x += vector;
 	position_.y -= gravity_;
 

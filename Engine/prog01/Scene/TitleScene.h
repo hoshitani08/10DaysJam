@@ -44,4 +44,14 @@ public: // メンバ関数
 private: // メンバ変数
 	//スプライト
 	std::unique_ptr<Sprite> sprite_;
+	std::unique_ptr<Sprite> backGround_;
+	// BGMが流れているか
+	bool isBgmFalg_ = false;
+	//
+	int audioTimer_ = 0;
+	//
+	float volume_ = 1.0f;
+	bool maxVolume_ = false;
+	//
+	bool isSelection = false;
 };

@@ -24,10 +24,11 @@ public: // サブクラス
 	{
 		float savePoint = 0.0f;
 		float point = 0.0f;
+		float all = 0.0f;
 	};
 
 private: // 定数
-	const float MAX_FUEL = 5000;
+	const float MAX_FUEL = 2000;
 
 public: // メンバ関数
 	// コンストラクタ
@@ -51,7 +52,11 @@ public: // メンバ関数
 	// プテラのスコア
 	void PBoneScore(Block::PParts pBone);
 	// スコアを足す
-	void AddScore(float score) { score_.savePoint += score; }
+	void AddScore(float score)
+	{
+		score_.savePoint += score;
+		score_.all += score;
+	}
 	// 掘った距離の計算
 	void DugDistanceCalculate(float dugDistance)
 	{
@@ -64,6 +69,8 @@ public: // メンバ関数
 	void Calculate();
 	// 燃料の残量取得
 	float GetFuel() { return fuel_.point; }
+
+	float GetScore() { return score_.all; }
 
 private: // 静的メンバ変数
 	// スコア

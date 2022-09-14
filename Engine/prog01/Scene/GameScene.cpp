@@ -104,6 +104,16 @@ void GameScene::Initialize()
 
 	// FBXオブジェクト生成
 
+	for (int i = 0; i < 3; i++)
+	{
+		backGround_[i] = Sprite::Create(11 + i, {});
+		if (i >= 2)
+		{
+			backGround_[i] = Sprite::Create(11, {});
+		}
+		backGround_[i]->SetPosition({ 0.0f, i * backGround_[i]->GetSize().y });
+	}
+
 	//UI生成
 	ui_ = std::make_unique<UserInterface>();
 	ui_->Initialize();
@@ -164,6 +174,10 @@ void GameScene::Update()
 			BlockBreak();
 			// プレイヤーの動き
 			PlayerMove();
+			for (int i = 0; i < 3; i++)
+			{
+				backGround_[i]->SetPosition({ 0.0f, backGround_[i]->GetPosition().y - 5.0f });
+			}
 		}
 	}
 	else
@@ -177,8 +191,7 @@ void GameScene::Update()
 		}
 	}
 
-	DebugText::GetInstance()->VariablePrint(0, 180, "", box_[0]->GetPosition().x, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 196, "", box_[14]->GetPosition().x, 1.0f);
+	BackGround();
 
 	for (auto a : drill_)
 	{
@@ -209,7 +222,10 @@ void GameScene::Draw()
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
 	// 背景スプライト描画
-
+	for (int i = 0; i < 3; i++)
+	{
+		backGround_[i]->Draw();
+	}
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -218,7 +234,20 @@ void GameScene::Draw()
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
 	Object3d::PreDraw(cmdList);
+	player_->Draw();
 
+	for (auto a : drill_)
+	{
+		a->Draw();
+	}
+
+	if (!flag)
+	{
+		for (auto a : box_)
+		{
+			a->Draw();
+		}
+	}
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
@@ -248,7 +277,6 @@ void GameScene::EffectDraw()
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
 	// 背景スプライト描画
-
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -257,20 +285,7 @@ void GameScene::EffectDraw()
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
 	Object3d::PreDraw(cmdList);
-	player_->Draw();
-
-	for (auto a : drill_)
-	{
-		a->Draw();
-	}
-
-	if (!flag)
-	{
-		for (auto a : box_)
-		{
-			a->Draw();
-		}
-	}
+	
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
@@ -346,7 +361,7 @@ void GameScene::BlockBreak()
 
 				if (ironStone.flag)
 				{
-					ui_->SetSaveFuel(-25);
+					ui_->SetSaveFuel(-10);
 				}
 				isMining = false;
 			}
@@ -422,6 +437,18 @@ void GameScene::HitBox()
 	if (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f)
 	{
 		saveAngle = input->PadStickAngle();
+	}
+	else if (input->TriggerKey(DIK_A))
+	{
+		saveAngle = 180;
+	}
+	else if (input->TriggerKey(DIK_D))
+	{
+		saveAngle = 0;
+	}
+	else if (input->TriggerKey(DIK_S))
+	{
+		saveAngle = 90;
 	}
 	else
 	{
@@ -688,14 +715,14 @@ void GameScene::SpecialMove()
 {
 	Input* input = Input::GetInstance();
 
-	if (input->TriggerPadKey(BUTTON_A))
+	if (input->TriggerPadKey(BUTTON_A) || input->TriggerKey(DIK_SPACE))
 	{
 		Drill* drill = new Drill;
 
 		drill->Initialize(hit_[0]->GetPosition(), player_->GetPosition(), saveAngle);
 
 		drill_.push_back(drill);
-		ui_->SetSaveFuel(-50);
+		ui_->SetSaveFuel(-25);
 	}
 
 	int count = 0;
@@ -837,4 +864,16 @@ void GameScene::PlayerEndMove()
 	}
 
 	player_->EndMove(gravity);
+}
+
+void GameScene::BackGround()
+{
+	Input* input = Input::GetInstance();
+	if (backGround_[2]->GetPosition().y < 10)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			backGround_[i]->SetPosition({ 0.0f, i * backGround_[i]->GetSize().y });
+		}
+	}
 }

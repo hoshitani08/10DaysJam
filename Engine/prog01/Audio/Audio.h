@@ -68,6 +68,12 @@ public: // サブクラス
 		unsigned int dataSize; // バッファのサイズ
 	};
 
+	struct LoopSoundData
+	{
+		SoundData soundData;
+		IXAudio2SourceVoice* pSourceVoice = nullptr;
+	};
+
 public: // メンバ関数
 	// 初期化
 	bool Initialize();
@@ -77,6 +83,7 @@ public: // メンバ関数
 	void PlayWave(int soundNumber, float volume = 1.0f);
 	void LoopPlayWave(int soundNumber, float volume = 1.0f);
 	void LoopStopWave(int soundNumber = 0);
+	void LoopSetVolume(int soundNumber = 0,float volume = 1.0f);
 
 private:
 	Audio();
@@ -94,6 +101,6 @@ private: // メンバ変数
 	XAudio2VoiceCallback voiceCallback;
 
 	map<int, SoundData> soundDatas;
-	std::vector<IXAudio2SourceVoice*> pSourceVoices;
+	std::vector<LoopSoundData> loopSoundDatas;
 	XAUDIO2_BUFFER buf{};
 };

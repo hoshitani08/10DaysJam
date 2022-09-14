@@ -405,6 +405,24 @@ bool Input::TriggerPadKey(PadKey keyNumber)
 	return false;
 }
 
+bool Input::TriggerPadStickRight()
+{
+	if (padData.lX > angle && !(padDataPre.lX > angle)) {
+		return true;
+	}
+
+	return false;
+}
+
+bool Input::TriggerPadStickLeft()
+{
+	if (padData.lX < -angle && !(padDataPre.lX < -angle)) {
+		return true;
+	}
+
+	return false;
+}
+
 bool Input::PushMouseLeft()
 {
 	// 0‚Å‚È‚¯‚ê‚Î‰Ÿ‚µ‚Ä‚¢‚é

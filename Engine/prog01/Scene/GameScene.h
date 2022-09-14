@@ -86,12 +86,16 @@ public: // メンバ関数
 	void PlayerMove();
 	// プレイヤーの最後の動き
 	void PlayerEndMove();
+	//
+	void BackGround();
 
 private: // メンバ変数
 	//カメラ
 	std::unique_ptr<Camera> camera_;
 	//スプライト
 	std::unique_ptr<Sprite> frame_;
+	std::array<std::unique_ptr<Sprite>, 3> backGround_;
+	int backGroundCreateCount_ = 0;
 	//パーティクル
 	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト

@@ -77,6 +77,9 @@ public: //メンバ関数
 	bool PushPadKey(PadKey keyNumber);
 	// キーのトリガーをチェック
 	bool TriggerPadKey(PadKey keyNumber);
+	//
+	bool TriggerPadStickRight();
+	bool TriggerPadStickLeft();
 
 	// キーの左ボタン押下をチェック
 	bool PushMouseLeft();
