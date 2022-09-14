@@ -151,7 +151,10 @@ void GameScene::Update()
 	HitBox();
 	if (ui_->GetFuel() > 0)
 	{
-		ChangeScene::GetInstance()->SetIsChange(false);
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
+		{
+			ChangeScene::GetInstance()->SetIsChange(false);
+		}
 		// zÎ‚ÌŒø‰Ê
 		OreBuff();
 		// ¶ƒNƒŠƒbƒN
@@ -185,7 +188,7 @@ void GameScene::Update()
 		ChangeScene::GetInstance()->SetIsChange(true);
 		PlayerEndMove();
 
-		if (ChangeScene::GetInstance()->GetIsIn())
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
 		{
 			SceneManager::GetInstance()->ChangeScene("ClearScene");
 		}

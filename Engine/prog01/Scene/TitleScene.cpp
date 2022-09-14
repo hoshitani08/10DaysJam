@@ -68,15 +68,31 @@ void TitleScene::Update()
 			}
 		}
 	}
-	
-	if (input->TriggerPadKey(BUTTON_A) || input->TriggerKey(DIK_SPACE))
-	{
-		ChangeScene::GetInstance()->SetIsChange(true);
-	}
 
-	if (ChangeScene::GetInstance()->GetIsIn())
+	if (!flag)
 	{
-		SceneManager::GetInstance()->ChangeScene("GameScene");
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
+		{
+			ChangeScene::GetInstance()->SetIsChange(false);
+		}
+
+		if (input->TriggerPadKey(BUTTON_A) || input->TriggerKey(DIK_SPACE))
+		{
+			ChangeScene::GetInstance()->SetIsChange(true);
+			flag = true;
+		}
+	}
+	else
+	{
+		volume_ -= 0.01f;
+		if (volume_ > 0.0f)
+		{
+			Audio::GetInstance()->LoopSetVolume(1, volume_);
+		}
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
+		{
+			SceneManager::GetInstance()->ChangeScene("GameScene");
+		}
 	}
 
 	ChangeScene::GetInstance()->Update();

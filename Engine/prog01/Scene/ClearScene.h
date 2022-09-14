@@ -43,7 +43,8 @@ public: // メンバ関数
 
 private: // メンバ変数
 	//
-	bool isSelection = false;
+	bool isSelection = true;
+	bool flag = false;
 	//UI
 	std::unique_ptr<UserInterface> ui_;
 	//スプライト

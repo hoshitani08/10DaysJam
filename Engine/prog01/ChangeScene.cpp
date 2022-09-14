@@ -23,35 +23,45 @@ void ChangeScene::Finalize()
 
 void ChangeScene::Update()
 {
-	if (isChange_ && !isIn_)
+	if (isChange_)
 	{
-		if (blackCurtainAlpha_ < 1.0f)
-		{
-			sprite_->SetColor({ 1,1,1, blackCurtainAlpha_ });
-			blackCurtainAlpha_ += 0.05;
-		}
-		else
-		{
-			isIn_ = true;
-			isOut_ = false;
-		}
+		MoveIn();
 	}
-	else if (!isChange_ && !isOut_)
+	else if (!isChange_ )
 	{
-		if (blackCurtainAlpha_ > 0.0f)
-		{
-			sprite_->SetColor({ 1,1,1, blackCurtainAlpha_ });
-			blackCurtainAlpha_ -= 0.05;
-		}
-		else
-		{
-			isIn_ = false;
-			isOut_ = true;
-		}
+		MoveOut();
 	}
 }
 
 void ChangeScene::Draw()
 {
 	sprite_->Draw();
+}
+
+void ChangeScene::MoveIn()
+{
+	if (blackCurtainAlpha_ < 1.0f)
+	{
+		sprite_->SetColor({ 1,1,1, blackCurtainAlpha_ });
+		blackCurtainAlpha_ += 0.05;
+	}
+	else if (blackCurtainAlpha_ > 1.0f)
+	{
+		isIn_ = true;
+		isOut_ = false;
+	}
+}
+
+void ChangeScene::MoveOut()
+{
+	if (blackCurtainAlpha_ > 0.0f)
+	{
+		sprite_->SetColor({ 1,1,1, blackCurtainAlpha_ });
+		blackCurtainAlpha_ -= 0.05;
+	}
+	else if(blackCurtainAlpha_ < 0.0f)
+	{
+		isIn_ = false;
+		isOut_ = true;
+	}
 }

@@ -41,6 +41,11 @@ public: // ƒƒ“ƒoŠÖ”
 	void Draw();
 
 	//
+	void MoveIn();
+	//
+	void MoveOut();
+
+	//
 	void SetIsChange(bool flag) { isChange_ = flag; }
 	//
 	bool GetIsChange() { return isChange_; }

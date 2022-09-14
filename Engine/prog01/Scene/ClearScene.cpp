@@ -40,30 +40,36 @@ void ClearScene::Finalize()
 
 void ClearScene::Update()
 {
-	/*Input* input = Input::GetInstance();
-	if (ChangeScene::GetInstance()->GetIsIn())
-	{
-		ChangeScene::GetInstance()->SetIsChange(false);
-	}
+	Input* input = Input::GetInstance();
 
-	if (input->TriggerPadKey(BUTTON_A))
+	if (!flag)
 	{
-		ChangeScene::GetInstance()->SetIsChange(true);
-	}
-
-	if (ChangeScene::GetInstance()->GetIsIn())
-	{
-		if (isSelection)
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
 		{
-			SceneManager::GetInstance()->ChangeScene("TitleScene");
+			ChangeScene::GetInstance()->SetIsChange(false);
 		}
-		else
+
+		if (input->TriggerPadKey(BUTTON_A) || input->TriggerKey(DIK_SPACE))
 		{
-			SceneManager::GetInstance()->ChangeScene("GameScene");
+			ChangeScene::GetInstance()->SetIsChange(true);
+			flag = true;
 		}
 	}
-
-	ChangeScene::GetInstance()->Update();*/
+	else
+	{
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
+		{
+			if (isSelection)
+			{
+				SceneManager::GetInstance()->ChangeScene("TitleScene");
+			}
+			else
+			{
+				SceneManager::GetInstance()->ChangeScene("GameScene");
+			}
+		}
+	}
+	ChangeScene::GetInstance()->Update();
 }
 
 void ClearScene::Draw()

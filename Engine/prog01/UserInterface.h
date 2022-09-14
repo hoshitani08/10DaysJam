@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <array>
+#include <algorithm>
 
 #include "Sprite.h"
 #include "Block.h"
@@ -28,7 +30,7 @@ public: // サブクラス
 	};
 
 private: // 定数
-	const float MAX_FUEL = 2000;
+	const float MAX_FUEL = 200;
 
 public: // メンバ関数
 	// コンストラクタ
@@ -77,6 +79,9 @@ private: // 静的メンバ変数
 	static NumberData score_;
 
 private: // メンバ変数
+	std::array<std::unique_ptr<Sprite>, 4> dugSprite_;
+	std::array<std::unique_ptr<Sprite>, 6> sprite_;
+
 	// 掘った距離
 	NumberData dugDistance_ = {};
 	// 燃料

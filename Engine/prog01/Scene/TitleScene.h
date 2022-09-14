@@ -54,4 +54,6 @@ private: // ƒƒ“ƒo•Ï”
 	bool maxVolume_ = false;
 	//
 	bool isSelection = false;
+
+	bool flag = false;
 };
