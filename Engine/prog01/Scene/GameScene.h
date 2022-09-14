@@ -125,6 +125,14 @@ private: // メンバ変数
 	bool isMining = false;
 	// 最後の重力
 	float gravity = 0.2f;
+	// BGMが流れているか
+	bool isBgmFalg_ = false;
+	//
+	int audioTimer_ = 0;
+	//
+	float volume_ = 1.5f;
+	bool maxVolume_ = false;
+	bool flag2 = false;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;

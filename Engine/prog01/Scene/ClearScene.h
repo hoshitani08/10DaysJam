@@ -50,4 +50,16 @@ private: // メンバ変数
 	//スプライト
 	std::array<std::unique_ptr<Sprite>, 6> sprite_;
 	std::unique_ptr<Sprite> backGround_;
+	std::unique_ptr<Sprite> result_;
+	std::unique_ptr<Sprite> score_;
+	std::unique_ptr<Sprite> retry_;
+	std::unique_ptr<Sprite> title_;
+
+	// BGMが流れているか
+	bool isBgmFalg_ = false;
+	//
+	int audioTimer_ = 0;
+	//
+	float volume_ = 1.5f;
+	bool maxVolume_ = false;
 };

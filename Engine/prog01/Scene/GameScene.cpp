@@ -145,6 +145,47 @@ void GameScene::Update()
 	Input* input = Input::GetInstance();
 	light_->Update();
 	particleMan_->Update();
+
+
+	if (!isBgmFalg_)
+	{
+		Audio::GetInstance()->LoopPlayWave(12);
+		isBgmFalg_ = true;
+	}
+	else if (isBgmFalg_ && !flag2)
+	{
+		audioTimer_++;
+
+		if (audioTimer_ >= 6500)
+		{
+			maxVolume_ = true;
+		}
+
+		if (!maxVolume_)
+		{
+			if (volume_ < 1.0f)
+			{
+				volume_ += 0.01f;
+				Audio::GetInstance()->LoopSetVolume(1, volume_);
+			}
+		}
+		else
+		{
+			if (volume_ > 0.0f)
+			{
+				volume_ -= 0.01f;
+				Audio::GetInstance()->LoopSetVolume(1, volume_);
+			}
+			else
+			{
+				maxVolume_ = false;
+				volume_ = 0.0f;
+				audioTimer_ = 0;
+			}
+		}
+	}
+
+
 	// ステージ生成
 	StageCreate();
 	// ヒットボックス
@@ -185,11 +226,19 @@ void GameScene::Update()
 	}
 	else
 	{
+		flag2 = true;
 		ChangeScene::GetInstance()->SetIsChange(true);
 		PlayerEndMove();
 
-		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
+		if (volume_ > 0.0f)
 		{
+			volume_ -= 0.05f;
+			Audio::GetInstance()->LoopSetVolume(1, volume_);
+		}
+
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut() && volume_ < 0.0f)
+		{
+			Audio::GetInstance()->LoopStopWave(1);
 			SceneManager::GetInstance()->ChangeScene("ClearScene");
 		}
 	}
@@ -264,8 +313,9 @@ void GameScene::Draw()
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
 	// デバッグテキストの描画
-	DebugText::GetInstance()->DrawAll(cmdList);
+	//DebugText::GetInstance()->DrawAll(cmdList);
 	frame_->Draw();
+	ui_->NearDraw();
 	ChangeScene::GetInstance()->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -356,6 +406,7 @@ void GameScene::BlockBreak()
 				delete a;
 				box_.erase(box_.begin() + count);
 				isMining = false;
+				Audio::GetInstance()->PlayWave(6, 0.5f);
 			}
 			else if (a->GetBlockType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
 			{
@@ -367,11 +418,13 @@ void GameScene::BlockBreak()
 					ui_->SetSaveFuel(-10);
 				}
 				isMining = false;
+				Audio::GetInstance()->PlayWave(10, 0.5f);
 			}
 			else if (a->GetBlockType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
+				Audio::GetInstance()->PlayWave(8, 0.5f);
 				ui_->SetSaveFuel(100);
 				isMining = false;
 			}
@@ -379,6 +432,7 @@ void GameScene::BlockBreak()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
+				Audio::GetInstance()->PlayWave(7, 0.5f);
 				ironStone.flag = true;
 				isMining = false;
 			}
@@ -386,6 +440,7 @@ void GameScene::BlockBreak()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
+				Audio::GetInstance()->PlayWave(7, 0.5f);
 				goldOre.flag = true;
 				isMining = false;
 			}
@@ -404,6 +459,7 @@ void GameScene::BlockBreak()
 				box_.erase(box_.begin() + count);
 
 				isMining = false;
+				Audio::GetInstance()->PlayWave(4, 0.5f);
 			}
 		}
 
@@ -457,6 +513,8 @@ void GameScene::HitBox()
 	{
 		saveAngle = 90;
 	}
+
+	player_->SetRotation({ -saveAngle + 90,270,0 });
 
 	if (saveAngle < 0)
 	{
@@ -718,14 +776,18 @@ void GameScene::SpecialMove()
 {
 	Input* input = Input::GetInstance();
 
-	if (input->TriggerPadKey(BUTTON_A) || input->TriggerKey(DIK_SPACE))
+	if (input->TriggerPadKey(BUTTON_A))
 	{
 		Drill* drill = new Drill;
 
 		drill->Initialize(hit_[0]->GetPosition(), player_->GetPosition(), saveAngle);
 
+		drill->SetRotation({ saveAngle + 270,90,0 });
+
 		drill_.push_back(drill);
 		ui_->SetSaveFuel(-25);
+
+		Audio::GetInstance()->PlayWave(2, 0.5f);
 	}
 
 	int count = 0;
@@ -749,19 +811,21 @@ void GameScene::SpecialMove()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-
+				Audio::GetInstance()->PlayWave(6, 0.5f);
 				b->AddCount(1);
 			}
 			else if (a->GetBlockType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
+				Audio::GetInstance()->PlayWave(10, 0.5f);
 				b->AddCount(1);
 			}
 			else if (a->GetBlockType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
+				Audio::GetInstance()->PlayWave(8, 0.5f);
 				b->AddCount(1);
 				ui_->SetSaveFuel(100);
 			}
@@ -769,6 +833,7 @@ void GameScene::SpecialMove()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
+				Audio::GetInstance()->PlayWave(7, 0.5f);
 				b->AddCount(1);
 				ironStone.flag = true;
 			}
@@ -776,6 +841,7 @@ void GameScene::SpecialMove()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
+				Audio::GetInstance()->PlayWave(7, 0.5f);
 				b->AddCount(1);
 				goldOre.flag = true;
 			}
@@ -793,6 +859,7 @@ void GameScene::SpecialMove()
 				delete a;
 				box_.erase(box_.begin() + count);
 				b->AddCount(1);
+				Audio::GetInstance()->PlayWave(4, 0.5f);
 			}
 
 			if (b->GetFlag())

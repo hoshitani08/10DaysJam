@@ -45,6 +45,7 @@ private: // メンバ変数
 	//スプライト
 	std::unique_ptr<Sprite> sprite_;
 	std::unique_ptr<Sprite> backGround_;
+	std::unique_ptr<Sprite> keysprite_;
 	// BGMが流れているか
 	bool isBgmFalg_ = false;
 	//

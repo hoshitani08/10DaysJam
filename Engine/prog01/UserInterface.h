@@ -30,7 +30,7 @@ public: // サブクラス
 	};
 
 private: // 定数
-	const float MAX_FUEL = 200;
+	const float MAX_FUEL = 2000;
 
 public: // メンバ関数
 	// コンストラクタ
@@ -71,8 +71,14 @@ public: // メンバ関数
 	void Calculate();
 	// 燃料の残量取得
 	float GetFuel() { return fuel_.point; }
-
+	//
 	float GetScore() { return score_.all; }
+	//
+	void DugCreate();
+	//
+	void ScoreCreate();
+	//
+	void FuelCreate();
 
 private: // 静的メンバ変数
 	// スコア
@@ -81,6 +87,7 @@ private: // 静的メンバ変数
 private: // メンバ変数
 	std::array<std::unique_ptr<Sprite>, 4> dugSprite_;
 	std::array<std::unique_ptr<Sprite>, 6> sprite_;
+	std::array<std::unique_ptr<Sprite>, 3> fuelSprite_;
 
 	// 掘った距離
 	NumberData dugDistance_ = {};

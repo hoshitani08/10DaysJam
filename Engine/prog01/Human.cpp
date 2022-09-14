@@ -24,9 +24,8 @@ std::unique_ptr<Human> Human::Create()
 
 void Human::Initialize()
 {
-	human_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("samplePlayer"));
+	human_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("player"));
 	human_->SetPosition({ 0,3,0 });
-	human_->SetRotation({ 0,90,0 });
 	human_->SetScale(scale_);
 }
 
@@ -82,7 +81,7 @@ void Human::Move(float angle, XMFLOAT2 gradient, float gravity)
 	{
 		position_.x = 13;
 	}
-
+	//
 	human_->SetPosition(position_);
 }
 

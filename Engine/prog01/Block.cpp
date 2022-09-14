@@ -7,12 +7,12 @@ void Block::Initialize(int type, XMFLOAT3 position)
 {
 	if (type == SOIL)
 	{
-		box_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sampleDirt11"));
+		box_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("stone"));
 		blockType_ = SOIL;
 	}
 	else if (type == ROCK)
 	{
-		box_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("stone"));
+		box_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("block"));
 		blockType_ = ROCK;
 	}
 	else if (type == COAL)

@@ -12,8 +12,9 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
-	sprite_ = Sprite::Create(1, { 0.0f,0.0f }, { 1,1,1,1 }, {-1.0f,-0.5f});
+	sprite_ = Sprite::Create(1, { 0.0f,90.0f }, { 1,1,1,1 }, {-1.0f,-0.5f});
 	backGround_ = Sprite::Create(11, { 0.0f,0.0f });
+	keysprite_ = Sprite::Create(3, { 120.0f,450.0f }, { 1,1,1,1 }, { -1.0f,-1.0f });
 
 	ChangeScene::GetInstance()->Initialize();
 }
@@ -31,7 +32,7 @@ void TitleScene::Update()
 		Audio::GetInstance()->LoopPlayWave(11);
 		isBgmFalg_ = true;
 	}
-	else
+	else if(isBgmFalg_ && !flag)
 	{
 		audioTimer_++;
 
@@ -42,22 +43,17 @@ void TitleScene::Update()
 
 		if (!maxVolume_)
 		{
-			volume_ += 0.01f;
-
 			if (volume_ < 1.0f)
 			{
+				volume_ += 0.01f;
 				Audio::GetInstance()->LoopSetVolume(1, volume_);
-			}
-			else
-			{
-				volume_ = 1.0f;
 			}
 		}
 		else
 		{
-			volume_ -= 0.01f;
 			if (volume_ > 0.0f)
 			{
+				volume_ -= 0.01f;
 				Audio::GetInstance()->LoopSetVolume(1, volume_);
 			}
 			else
@@ -84,13 +80,14 @@ void TitleScene::Update()
 	}
 	else
 	{
-		volume_ -= 0.01f;
+		volume_ -= 0.05f;
 		if (volume_ > 0.0f)
 		{
 			Audio::GetInstance()->LoopSetVolume(1, volume_);
 		}
-		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut() && volume_ < 0.0f)
 		{
+			Audio::GetInstance()->LoopStopWave(1);
 			SceneManager::GetInstance()->ChangeScene("GameScene");
 		}
 	}
@@ -122,6 +119,7 @@ void TitleScene::Draw()
 	Sprite::PreDraw(cmdList);
 	DebugText::GetInstance()->DrawAll(cmdList);
 	sprite_->Draw();
+	keysprite_->Draw();
 	ChangeScene::GetInstance()->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();

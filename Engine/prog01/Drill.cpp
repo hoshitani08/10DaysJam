@@ -5,7 +5,7 @@
 
 void Drill::Initialize(XMFLOAT3 hPosition, XMFLOAT3 pPosition, float saveAngle)
 {
-	object_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+	object_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("playerDrill"));
 
 	position_ = hPosition;
 	scale_ = START_SCALE;

@@ -19,7 +19,12 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+	if (!Sprite::LoadTexture(3, L"Resources/sprite/pressA.png"))
+	{
+		assert(0);
+	}
 
+	// ÉQÅ[ÉÄâÊñ 
 	if (!Sprite::LoadTexture(10, L"Resources/sprite/frame.png"))
 	{
 		assert(0);
@@ -70,6 +75,24 @@ void SpriteFactory::Initialize()
 		assert(0);
 	}
 	if (!Sprite::LoadTexture(29, L"Resources/sprite/num/num9.png"))
+	{
+		assert(0);
+	}
+
+	// ÉNÉäÉAâÊñ 
+	if (!Sprite::LoadTexture(30, L"Resources/sprite/Result.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(31, L"Resources/sprite/Score.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(32, L"Resources/sprite/retry.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(33, L"Resources/sprite/Title.png"))
 	{
 		assert(0);
 	}

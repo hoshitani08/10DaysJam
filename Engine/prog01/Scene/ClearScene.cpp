@@ -28,10 +28,15 @@ void ClearScene::Initialize()
 	for (int i = 0; i < sprite_.size(); i++)
 	{
 		sprite_[i] = Sprite::Create(20 + count[i], { 0.0f,0.0f }, { 1,1,1,1 });
-		sprite_[i]->SetPosition({ i * 50.0f , 0 });
+		sprite_[i]->SetPosition({ (i * 50.0f) + 500 , 300 });
 	}
 
 	backGround_ = Sprite::Create(12, { 0.0f,0.0f });
+
+	result_ = Sprite::Create(30, { 500.0f,80.0f });
+	score_ = Sprite::Create(31,  { 200.0f,300.0f });
+	retry_ = Sprite::Create(32,  { 260.0f,500.0f });
+	title_ = Sprite::Create(33,  { 830.0f,500.0f });
 }
 
 void ClearScene::Finalize()
@@ -42,6 +47,44 @@ void ClearScene::Update()
 {
 	Input* input = Input::GetInstance();
 
+	if (!isBgmFalg_)
+	{
+		Audio::GetInstance()->LoopPlayWave(11);
+		isBgmFalg_ = true;
+	}
+	else if (isBgmFalg_ && !flag)
+	{
+		audioTimer_++;
+
+		if (audioTimer_ >= 6140)
+		{
+			maxVolume_ = true;
+		}
+
+		if (!maxVolume_)
+		{
+			if (volume_ < 1.0f)
+			{
+				volume_ += 0.01f;
+				Audio::GetInstance()->LoopSetVolume(1, volume_);
+			}
+		}
+		else
+		{
+			if (volume_ > 0.0f)
+			{
+				volume_ -= 0.01f;
+				Audio::GetInstance()->LoopSetVolume(1, volume_);
+			}
+			else
+			{
+				maxVolume_ = false;
+				volume_ = 0.0f;
+				audioTimer_ = 0;
+			}
+		}
+	}
+
 	if (!flag)
 	{
 		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
@@ -49,22 +92,53 @@ void ClearScene::Update()
 			ChangeScene::GetInstance()->SetIsChange(false);
 		}
 
+		if (input->TriggerPadStickLeft() || input->TriggerPadStickRight())
+		{
+			if (isSelection)
+			{
+				isSelection = false;
+			}
+			else
+			{
+				isSelection = true;
+			}
+		}
+
 		if (input->TriggerPadKey(BUTTON_A) || input->TriggerKey(DIK_SPACE))
 		{
 			ChangeScene::GetInstance()->SetIsChange(true);
 			flag = true;
 		}
+
+		if(isSelection)
+		{
+			retry_->SetColor({ 1,0,0,1 });
+			title_->SetColor({ 1,1,1,1 });
+		}
+		else
+		{
+			retry_->SetColor({ 1,1,1,1 });
+			title_->SetColor({ 1,0,0,1 });
+		}
 	}
 	else
 	{
-		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
+
+		volume_ -= 0.05f;
+		if (volume_ > 0.0f)
+		{
+			Audio::GetInstance()->LoopSetVolume(1, volume_);
+		}
+		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut() && volume_ < 0.0f)
 		{
 			if (isSelection)
 			{
+				Audio::GetInstance()->LoopStopWave(1);
 				SceneManager::GetInstance()->ChangeScene("TitleScene");
 			}
 			else
 			{
+				Audio::GetInstance()->LoopStopWave(1);
 				SceneManager::GetInstance()->ChangeScene("GameScene");
 			}
 		}
@@ -99,6 +173,11 @@ void ClearScene::Draw()
 	{
 		sprite_[i]->Draw();
 	}
+
+	result_->Draw();
+	score_->Draw();
+	retry_->Draw();
+	title_->Draw();
 
 	//ChangeScene::GetInstance()->Draw();
 	// スプライト描画後処理
