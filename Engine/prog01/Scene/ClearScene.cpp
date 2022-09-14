@@ -49,7 +49,7 @@ void ClearScene::Update()
 
 	if (!isBgmFalg_)
 	{
-		Audio::GetInstance()->LoopPlayWave(11);
+		Audio::GetInstance()->LoopPlayWave(12);
 		isBgmFalg_ = true;
 	}
 	else if (isBgmFalg_ && !flag)
@@ -102,6 +102,7 @@ void ClearScene::Update()
 			{
 				isSelection = true;
 			}
+			Audio::GetInstance()->PlayWave(1, 0.2f);
 		}
 
 		if (input->TriggerPadKey(BUTTON_A) || input->TriggerKey(DIK_SPACE))
@@ -112,13 +113,13 @@ void ClearScene::Update()
 
 		if(isSelection)
 		{
-			retry_->SetColor({ 1,0,0,1 });
-			title_->SetColor({ 1,1,1,1 });
+			title_->SetColor({ 3,0,0,1 });
+			retry_->SetColor({ 1,1,1,1 });
 		}
 		else
 		{
-			retry_->SetColor({ 1,1,1,1 });
-			title_->SetColor({ 1,0,0,1 });
+			title_->SetColor({ 1,1,1,1 });
+			retry_->SetColor({ 3,0,0,1 });
 		}
 	}
 	else

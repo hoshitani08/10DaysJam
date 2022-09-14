@@ -114,6 +114,10 @@ void GameScene::Initialize()
 		backGround_[i]->SetPosition({ 0.0f, i * backGround_[i]->GetSize().y });
 	}
 
+	start[0] = Sprite::Create(40, {300,500},{1,1,1,alpha_[0]});
+	start[1] = Sprite::Create(41, {300,500},{1,1,1,alpha_[1]});
+	start[2] = Sprite::Create(42, { 300,500 }, { 1,1,1,alpha_[2] });
+
 	//UI生成
 	ui_ = std::make_unique<UserInterface>();
 	ui_->Initialize();
@@ -146,100 +150,159 @@ void GameScene::Update()
 	light_->Update();
 	particleMan_->Update();
 
-
-	if (!isBgmFalg_)
-	{
-		Audio::GetInstance()->LoopPlayWave(12);
-		isBgmFalg_ = true;
-	}
-	else if (isBgmFalg_ && !flag2)
-	{
-		audioTimer_++;
-
-		if (audioTimer_ >= 6500)
-		{
-			maxVolume_ = true;
-		}
-
-		if (!maxVolume_)
-		{
-			if (volume_ < 1.0f)
-			{
-				volume_ += 0.01f;
-				Audio::GetInstance()->LoopSetVolume(1, volume_);
-			}
-		}
-		else
-		{
-			if (volume_ > 0.0f)
-			{
-				volume_ -= 0.01f;
-				Audio::GetInstance()->LoopSetVolume(1, volume_);
-			}
-			else
-			{
-				maxVolume_ = false;
-				volume_ = 0.0f;
-				audioTimer_ = 0;
-			}
-		}
-	}
-
-
 	// ステージ生成
 	StageCreate();
 	// ヒットボックス
 	HitBox();
-	if (ui_->GetFuel() > 0)
+	if (!startflag)
 	{
+		startTimer++;
+
 		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut())
 		{
 			ChangeScene::GetInstance()->SetIsChange(false);
 		}
-		// 鉱石の効果
-		OreBuff();
-		// 左クリック
-		SpecialMove();
 
-		if (!isMining)
+		if (alpha_[0] >= 0.0f)
 		{
-			coolTimer++;
-
-			if (coolTimer > 10)
-			{
-				isMining = true;
-				coolTimer = 0;
-			}
+			start[0]->SetColor({ 1,1,1,alpha_[0] });
+			alpha_[0] -= 0.005f;
+		}
+		else
+		{
+			endflag[0] = true;
 		}
 
-		if (isMining)
+		if (endflag[0])
 		{
-			// ブロックの破壊
-			BlockBreak();
-			// プレイヤーの動き
-			PlayerMove();
-			for (int i = 0; i < 3; i++)
+			if (alpha_[1] >= 0.0f)
 			{
-				backGround_[i]->SetPosition({ 0.0f, backGround_[i]->GetPosition().y - 5.0f });
+				start[1]->SetColor({ 1,1,1,alpha_[1] });
+				alpha_[1] -= 0.01f;
 			}
+			else
+			{
+				endflag[1] = true;
+			}
+		}
+		if(endflag[0] && endflag[1])
+		{
+			Audio::GetInstance()->PlayWave(5, 1.2f);
+			startflag = true;
+			startTimer = 0;
 		}
 	}
 	else
 	{
-		flag2 = true;
-		ChangeScene::GetInstance()->SetIsChange(true);
-		PlayerEndMove();
-
-		if (volume_ > 0.0f)
+		if (!isBgmFalg_)
 		{
-			volume_ -= 0.05f;
-			Audio::GetInstance()->LoopSetVolume(1, volume_);
+			Audio::GetInstance()->LoopPlayWave(12);
+			isBgmFalg_ = true;
+		}
+		else if (isBgmFalg_ && !flag2)
+		{
+			audioTimer_++;
+
+			if (audioTimer_ >= 6500)
+			{
+				maxVolume_ = true;
+			}
+
+			if (!maxVolume_)
+			{
+				if (volume_ < 1.0f)
+				{
+					volume_ += 0.01f;
+					Audio::GetInstance()->LoopSetVolume(1, volume_);
+				}
+			}
+			else
+			{
+				if (volume_ > 0.0f)
+				{
+					volume_ -= 0.01f;
+					Audio::GetInstance()->LoopSetVolume(1, volume_);
+				}
+				else
+				{
+					maxVolume_ = false;
+					volume_ = 0.0f;
+					audioTimer_ = 0;
+				}
+			}
 		}
 
-		if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut() && volume_ < 0.0f)
+
+		
+		if (ui_->GetFuel() > 0)
 		{
-			Audio::GetInstance()->LoopStopWave(1);
-			SceneManager::GetInstance()->ChangeScene("ClearScene");
+			
+			// 鉱石の効果
+			OreBuff();
+			// 左クリック
+			SpecialMove();
+
+			if (!isMining)
+			{
+				coolTimer++;
+
+				if (coolTimer > 10)
+				{
+					isMining = true;
+					coolTimer = 0;
+				}
+			}
+
+			if (isMining)
+			{
+				// ブロックの破壊
+				BlockBreak();
+				// プレイヤーの動き
+				PlayerMove();
+				for (int i = 0; i < 3; i++)
+				{
+					backGround_[i]->SetPosition({ 0.0f, backGround_[i]->GetPosition().y - 5.0f });
+				}
+			}
+		}
+		else
+		{
+			startTimer++;
+
+			if (startTimer <= 1)
+			{
+				Audio::GetInstance()->PlayWave(3, 1.2f);
+			}
+
+			if (alpha_[2] < 1.0f)
+			{
+				start[2]->SetColor({ 1,1,1,alpha_[2] });
+				alpha_[2] += 0.05f;
+			}
+
+			if (startTimer >= 60)
+			{
+				fFlag = true;
+			}
+			flag2 = true;
+			if (fFlag)
+			{
+				ChangeScene::GetInstance()->SetIsChange(true);
+			}
+			
+			PlayerEndMove();
+
+			if (volume_ > 0.0f)
+			{
+				volume_ -= 0.05f;
+				Audio::GetInstance()->LoopSetVolume(1, volume_);
+			}
+
+			if (ChangeScene::GetInstance()->GetIsIn() && !ChangeScene::GetInstance()->GetIsOut() && volume_ < 0.0f && fFlag)
+			{
+				Audio::GetInstance()->LoopStopWave(1);
+				SceneManager::GetInstance()->ChangeScene("ClearScene");
+			}
 		}
 	}
 
@@ -315,7 +378,24 @@ void GameScene::Draw()
 	// デバッグテキストの描画
 	//DebugText::GetInstance()->DrawAll(cmdList);
 	frame_->Draw();
+	
 	ui_->NearDraw();
+
+	if (!endflag[0])
+	{
+		start[0]->Draw();
+	}
+	else if (endflag[0] && !endflag[1])
+	{
+		start[1]->Draw();
+	}
+
+	if (endflag[2])
+	{
+		start[2]->Draw();
+	}
+	
+	//
 	ChangeScene::GetInstance()->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -406,7 +486,7 @@ void GameScene::BlockBreak()
 				delete a;
 				box_.erase(box_.begin() + count);
 				isMining = false;
-				Audio::GetInstance()->PlayWave(6, 0.5f);
+				Audio::GetInstance()->PlayWave(6, 0.2f);
 			}
 			else if (a->GetBlockType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
 			{
@@ -418,13 +498,13 @@ void GameScene::BlockBreak()
 					ui_->SetSaveFuel(-10);
 				}
 				isMining = false;
-				Audio::GetInstance()->PlayWave(10, 0.5f);
+				Audio::GetInstance()->PlayWave(10, 0.2f);
 			}
 			else if (a->GetBlockType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-				Audio::GetInstance()->PlayWave(8, 0.5f);
+				Audio::GetInstance()->PlayWave(8, 0.2f);
 				ui_->SetSaveFuel(100);
 				isMining = false;
 			}
@@ -432,7 +512,7 @@ void GameScene::BlockBreak()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-				Audio::GetInstance()->PlayWave(7, 0.5f);
+				Audio::GetInstance()->PlayWave(7, 0.2f);
 				ironStone.flag = true;
 				isMining = false;
 			}
@@ -440,7 +520,7 @@ void GameScene::BlockBreak()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-				Audio::GetInstance()->PlayWave(7, 0.5f);
+				Audio::GetInstance()->PlayWave(7, 0.2f);
 				goldOre.flag = true;
 				isMining = false;
 			}
@@ -459,7 +539,7 @@ void GameScene::BlockBreak()
 				box_.erase(box_.begin() + count);
 
 				isMining = false;
-				Audio::GetInstance()->PlayWave(4, 0.5f);
+				Audio::GetInstance()->PlayWave(4, 0.2f);
 			}
 		}
 
@@ -787,7 +867,7 @@ void GameScene::SpecialMove()
 		drill_.push_back(drill);
 		ui_->SetSaveFuel(-25);
 
-		Audio::GetInstance()->PlayWave(2, 0.5f);
+		Audio::GetInstance()->PlayWave(2, 0.2f);
 	}
 
 	int count = 0;
@@ -811,21 +891,21 @@ void GameScene::SpecialMove()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-				Audio::GetInstance()->PlayWave(6, 0.5f);
+				Audio::GetInstance()->PlayWave(6, 0.2f);
 				b->AddCount(1);
 			}
 			else if (a->GetBlockType() == Block::ROCK && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-				Audio::GetInstance()->PlayWave(10, 0.5f);
+				Audio::GetInstance()->PlayWave(10, 0.2f);
 				b->AddCount(1);
 			}
 			else if (a->GetBlockType() == Block::COAL && Collision::CheckSphere2Box(player, enemy))
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-				Audio::GetInstance()->PlayWave(8, 0.5f);
+				Audio::GetInstance()->PlayWave(8, 0.2f);
 				b->AddCount(1);
 				ui_->SetSaveFuel(100);
 			}
@@ -833,7 +913,7 @@ void GameScene::SpecialMove()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-				Audio::GetInstance()->PlayWave(7, 0.5f);
+				Audio::GetInstance()->PlayWave(7, 0.2f);
 				b->AddCount(1);
 				ironStone.flag = true;
 			}
@@ -841,7 +921,7 @@ void GameScene::SpecialMove()
 			{
 				delete a;
 				box_.erase(box_.begin() + count);
-				Audio::GetInstance()->PlayWave(7, 0.5f);
+				Audio::GetInstance()->PlayWave(7, 0.2f);
 				b->AddCount(1);
 				goldOre.flag = true;
 			}
@@ -859,7 +939,7 @@ void GameScene::SpecialMove()
 				delete a;
 				box_.erase(box_.begin() + count);
 				b->AddCount(1);
-				Audio::GetInstance()->PlayWave(4, 0.5f);
+				Audio::GetInstance()->PlayWave(4, 0.2f);
 			}
 
 			if (b->GetFlag())

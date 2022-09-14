@@ -30,7 +30,7 @@ public: // サブクラス
 	};
 
 private: // 定数
-	const float MAX_FUEL = 2000;
+	const float MAX_FUEL = 20;
 
 public: // メンバ関数
 	// コンストラクタ

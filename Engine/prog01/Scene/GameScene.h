@@ -130,9 +130,18 @@ private: // ƒƒ“ƒo•Ï”
 	//
 	int audioTimer_ = 0;
 	//
-	float volume_ = 1.5f;
+	float volume_ = 1.0f;
 	bool maxVolume_ = false;
 	bool flag2 = false;
+
+	bool startflag = false;
+	int startTimer = 0;
+	std::array<std::unique_ptr<Sprite>, 3> start;
+	std::array<float, 3> alpha_ = { 1,1 ,1};
+	std::array<bool, 3>endflag = {};
+
+	bool fFlag = false;
+
 
 	//ƒ‰ƒCƒg
 	std::unique_ptr<LightGroup> light_;

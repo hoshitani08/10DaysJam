@@ -96,6 +96,19 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+
+	if (!Sprite::LoadTexture(40, L"Resources/sprite/Ready.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(41, L"Resources/sprite/GO.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(42, L"Resources/sprite/finish.png"))
+	{
+		assert(0);
+	}
 }
 
 SpriteFactory* SpriteFactory::GetInstance()

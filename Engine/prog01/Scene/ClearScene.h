@@ -60,6 +60,6 @@ private: // ƒƒ“ƒo•Ï”
 	//
 	int audioTimer_ = 0;
 	//
-	float volume_ = 1.5f;
+	float volume_ = 1.0f;
 	bool maxVolume_ = false;
 };
